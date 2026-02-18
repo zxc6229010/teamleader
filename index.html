@@ -59,6 +59,11 @@ header p{
   box-shadow:0 20px 40px rgba(0,0,0,0.08);
 }
 
+.card h2{
+  font-size:22px;
+  margin-bottom:18px;
+}
+
 .label{
   font-size:14px;
   margin-top:12px;
@@ -103,6 +108,11 @@ button{
   background:var(--primary-dark);
 }
 
+.primary:disabled{
+  opacity:.65;
+  cursor:not-allowed;
+}
+
 #msg{
   margin-top:14px;
   font-size:14px;
@@ -117,8 +127,13 @@ button{
   60%{ transform:translateX(-4px); }
   80%{ transform:translateX(4px); }
 }
-.shakeBtn{
-  animation:shakeBtn .3s ease;
+.shakeBtn{ animation:shakeBtn .3s ease; }
+
+footer{
+  margin-top:40px;
+  margin-bottom:30px;
+  font-size:12px;
+  color:#9ca3af;
 }
 </style>
 </head>
@@ -126,21 +141,26 @@ button{
 <body>
 
 <header>
-  <img src="./schoolbadge.gif">
+  <img src="./schoolbadge.gif" alt="校徽">
   <h1>校專車路隊長管理系統</h1>
   <p>TEAMLEADER SYSTEM</p>
 </header>
 
 <div class="card">
+  <h2>登入</h2>
+
   <label class="label">帳號（學生請輸入學號）</label>
-  <input id="email" type="text" placeholder="輸入學號或Email">
+  <input id="account" type="text" placeholder="輸入學號或 Email" autocomplete="username">
 
   <label class="label">密碼</label>
-  <input id="password" type="password" placeholder="輸入密碼">
+  <input id="password" type="password" placeholder="輸入密碼" autocomplete="current-password">
 
   <button id="btnLogin" class="primary">登入</button>
+
   <div id="msg"></div>
 </div>
+
+<footer>© Kmsh Teamleader</footer>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
@@ -157,7 +177,7 @@ const auth = firebase.auth();
 
 const msg = document.getElementById("msg");
 const btnLogin = document.getElementById("btnLogin");
-const accountEl = document.getElementById("email");
+const accountEl = document.getElementById("account");
 const passEl = document.getElementById("password");
 
 function shake(){
@@ -167,43 +187,45 @@ function shake(){
 
 function isEmail(v){ return v.includes("@"); }
 
+[accountEl, passEl].forEach(el=>{
+  el.addEventListener("keydown", (e)=>{
+    if(e.key === "Enter") btnLogin.click();
+  });
+});
+
 btnLogin.onclick = async ()=>{
-  msg.textContent="";
+  msg.textContent = "";
 
   const account = accountEl.value.trim();
   const password = passEl.value.trim();
 
   if(!account || !password){
-    msg.textContent="請輸入帳號與密碼";
+    msg.textContent = "請輸入帳號與密碼";
     shake();
     return;
   }
 
-  btnLogin.disabled=true;
+  btnLogin.disabled = true;
 
   try{
+    const loginEmail = isEmail(account) ? account : (account + "@student.local");
+    await auth.signInWithEmailAndPassword(loginEmail, password);
 
-    if(isEmail(account)){
-      await auth.signInWithEmailAndPassword(account,password);
-    }else{
-      const fakeEmail = account + "@student.local";
-      await auth.signInWithEmailAndPassword(fakeEmail,password);
-    }
+    window.location.href = "dashboard.html";
+    return;
 
   }catch(e){
+    const studentLogin = !isEmail(account);
 
-    if(e.code==="auth/user-not-found"){
-      msg.textContent="帳號尚未開通，請洽詢管理員";
+    if(e.code === "auth/user-not-found" && studentLogin){
+      msg.textContent = "帳號尚未開通，請洽詢管理員";
     }else{
-      msg.textContent="帳號或密碼錯誤，請洽詢管理員";
+      msg.textContent = "帳號或密碼錯誤，請洽詢管理員";
     }
 
     shake();
-    btnLogin.disabled=false;
-    return;
+    btnLogin.disabled = false;
   }
-
-  window.location.href="dashboard.html";
 };
 </script>
 
