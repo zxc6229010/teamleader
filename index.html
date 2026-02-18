@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>校專車路隊長管理系統</title>
+
+<style>
+:root{
+  --primary:#0088FF;
+  --primary-dark:#0077E6;
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans TC",sans-serif;
+}
+
+body{
+  background:linear-gradient(180deg,#eef2f7,#e5eaf2);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+header{
+  margin-top:50px;
+  text-align:center;
+}
+
+header img{
+  width:70px;
+  margin-bottom:14px;
+}
+
+header h1{
+  font-size:28px;
+  font-weight:700;
+  letter-spacing:1px;
+  color:#1f2937;
+}
+
+header p{
+  margin-top:6px;
+  letter-spacing:4px;
+  font-size:13px;
+  color:#6b7280;
+}
+
+.card{
+  margin-top:40px;
+  background:white;
+  width:380px;
+  padding:36px 32px;
+  border-radius:18px;
+  box-shadow:0 20px 40px rgba(0,0,0,0.08);
+}
+
+.label{
+  font-size:14px;
+  margin-top:12px;
+  margin-bottom:6px;
+  display:block;
+  color:#374151;
+}
+
+input{
+  width:100%;
+  padding:12px 14px;
+  border-radius:12px;
+  border:1px solid #e5e7eb;
+  background:#f9fafb;
+  font-size:14px;
+}
+
+input:focus{
+  outline:none;
+  border:1px solid var(--primary);
+  background:white;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  margin-top:20px;
+  border-radius:14px;
+  border:none;
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .2s ease;
+}
+
+.primary{
+  background:var(--primary);
+  color:white;
+}
+
+.primary:hover{
+  background:var(--primary-dark);
+}
+
+#msg{
+  margin-top:14px;
+  font-size:14px;
+  text-align:center;
+  color:#ef4444;
+}
+
+@keyframes shakeBtn{
+  0%,100%{ transform:translateX(0); }
+  20%{ transform:translateX(-6px); }
+  40%{ transform:translateX(6px); }
+  60%{ transform:translateX(-4px); }
+  80%{ transform:translateX(4px); }
+}
+.shakeBtn{
+  animation:shakeBtn .3s ease;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <img src="./schoolbadge.gif">
+  <h1>校專車路隊長管理系統</h1>
+  <p>TEAMLEADER SYSTEM</p>
+</header>
+
+<div class="card">
+  <label class="label">帳號（學生請輸入學號）</label>
+  <input id="email" type="text" placeholder="輸入學號或Email">
+
+  <label class="label">密碼</label>
+  <input id="password" type="password" placeholder="輸入密碼">
+
+  <button id="btnLogin" class="primary">登入</button>
+  <div id="msg"></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAXgHiQ-Kh6cv4kkOFuHVCUOwD-C1HoUQI",
+  authDomain: "teamleader-system.firebaseapp.com",
+  projectId: "teamleader-system",
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+const msg = document.getElementById("msg");
+const btnLogin = document.getElementById("btnLogin");
+const accountEl = document.getElementById("email");
+const passEl = document.getElementById("password");
+
+function shake(){
+  btnLogin.classList.add("shakeBtn");
+  setTimeout(()=>btnLogin.classList.remove("shakeBtn"),300);
+}
+
+function isEmail(v){ return v.includes("@"); }
+
+btnLogin.onclick = async ()=>{
+  msg.textContent="";
+
+  const account = accountEl.value.trim();
+  const password = passEl.value.trim();
+
+  if(!account || !password){
+    msg.textContent="請輸入帳號與密碼";
+    shake();
+    return;
+  }
+
+  btnLogin.disabled=true;
+
+  try{
+
+    if(isEmail(account)){
+      await auth.signInWithEmailAndPassword(account,password);
+    }else{
+      const fakeEmail = account + "@student.local";
+      await auth.signInWithEmailAndPassword(fakeEmail,password);
+    }
+
+  }catch(e){
+
+    if(e.code==="auth/user-not-found"){
+      msg.textContent="帳號尚未開通，請洽詢管理員";
+    }else{
+      msg.textContent="帳號或密碼錯誤，請洽詢管理員";
+    }
+
+    shake();
+    btnLogin.disabled=false;
+    return;
+  }
+
+  window.location.href="dashboard.html";
+};
+</script>
+
+</body>
+</html>
