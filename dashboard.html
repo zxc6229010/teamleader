@@ -1,698 +1,97 @@
-<!doctype html>
-<html lang="zh-Hant">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>校專車路隊長管理系統｜Dashboard</title>
-
-<style>
-:root{
-  --primary:#0088FF;
-  --primary-dark:#0077E6;
-  --bg1:#eef2f7;
-  --bg2:#e5eaf2;
-  --text:#111827;
-  --muted:#6b7280;
-  --border:#eef2f7;
-}
-
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans TC",sans-serif;
-}
-
-body{
-  background:linear-gradient(180deg,var(--bg1),var(--bg2));
-  min-height:100vh;
-  color:var(--text);
-}
-
-a{ color:inherit; text-decoration:none; }
-
-/* ===== Layout ===== */
-.app{
-  width:min(1200px, calc(100% - 32px));
-  margin:22px auto 26px;
-  display:grid;
-  grid-template-columns: 280px 1fr;
-  gap:18px;
-  align-items:stretch;
-}
-
-@media (max-width: 900px){
-  .app{
-    grid-template-columns: 1fr;
-    width:calc(100% - 20px);
-    margin:14px auto 18px;
-  }
-}
-
-/* ===== Sidebar ===== */
-.sidebar{
-  background:white;
-  border-radius:18px;
-  box-shadow:0 20px 40px rgba(0,0,0,0.08);
-  padding:18px 16px;
-  position:sticky;
-  top:18px;
-  height: calc(100vh - 36px);
-  overflow:auto;
-}
-
-.brand{
-  display:flex;
-  gap:12px;
-  align-items:center;
-  padding:10px 10px 14px;
-  border-bottom:1px solid var(--border);
-  margin-bottom:12px;
-}
-
-.brand img{
-  width:42px;
-  height:42px;
-  border-radius:12px;
-  background:#f3f4f6;
-}
-
-.brand h1{
-  font-size:16px;
-  font-weight:800;
-  color:#1f2937;
-  line-height:1.2;
-}
-
-.brand p{
-  font-size:11px;
-  color:var(--muted);
-  letter-spacing:2px;
-  margin-top:3px;
-}
-
-.nav{
-  margin-top:10px;
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-}
-
-.navbtn{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:12px 12px;
-  border-radius:14px;
-  cursor:pointer;
-  user-select:none;
-  transition:all .15s ease;
-  border:1px solid transparent;
-}
-
-.navbtn:hover{
-  background:#f9fafb;
-  border-color:var(--border);
-}
-
-.navbtn.active{
-  background:var(--primary);
-  color:white;
-}
-
-.icon{
-  width:34px;
-  height:34px;
-  border-radius:12px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:rgba(0,136,255,0.12);
-  color:var(--primary);
-  font-weight:800;
-}
-
-.navbtn.active .icon{
-  background:rgba(255,255,255,.22);
-  color:white;
-}
-
-.navlabel{
-  display:flex;
-  flex-direction:column;
-  gap:2px;
-}
-
-.navlabel b{ font-size:14px; }
-.navlabel span{ font-size:12px; opacity:.9; }
-
-.sidefoot{
-  margin-top:16px;
-  padding-top:14px;
-  border-top:1px solid var(--border);
-}
-
-.small{
-  font-size:12px;
-  color:var(--muted);
-  line-height:1.6;
-}
-
-.logout{
-  margin-top:10px;
-  width:100%;
-  padding:12px;
-  border-radius:14px;
-  border:none;
-  background:var(--primary);
-  color:white;
-  font-weight:800;
-  cursor:pointer;
-  transition:all .2s ease;
-}
-.logout:hover{ background:var(--primary-dark); }
-
-/* ===== Main ===== */
-.main{
-  background:white;
-  border-radius:18px;
-  box-shadow:0 20px 40px rgba(0,0,0,0.08);
-  padding:18px 18px 22px;
-  overflow:hidden;
-}
-
-.topbar{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:12px;
-  border-bottom:1px solid var(--border);
-  padding-bottom:14px;
-  margin-bottom:16px;
-}
-
-.leftTop{
-  display:flex;
-  align-items:flex-start;
-  gap:10px;
-}
-
-.hamburger{
-  display:none;
-  width:44px;
-  height:44px;
-  border-radius:14px;
-  border:1px solid var(--border);
-  background:#f9fafb;
-  cursor:pointer;
-  align-items:center;
-  justify-content:center;
-  transition:.15s ease;
-}
-.hamburger:hover{ border-color:#dbe5f5; background:#fff; }
-
-.hamburger svg{
-  width:22px;
-  height:22px;
-}
-
-.pageTitle{
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-}
-
-.pageTitle h2{
-  font-size:18px;
-  color:var(--text);
-}
-
-.pageTitle p{
-  font-size:12px;
-  color:var(--muted);
-  letter-spacing:1px;
-}
-
-.userbox{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  background:#f9fafb;
-  border:1px solid var(--border);
-  padding:10px 12px;
-  border-radius:14px;
-  min-width: 220px;
-}
-
-.userdot{
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  background:#16a34a;
-}
-
-.userinfo{
-  display:flex;
-  flex-direction:column;
-  gap:2px;
-}
-
-.userinfo b{
-  font-size:13px;
-  color:var(--text);
-}
-.userinfo span{
-  font-size:12px;
-  color:var(--muted);
-}
-
-/* Sections */
-.section{
-  display:none;
-  animation: fadeUp .22s ease;
-}
-.section.active{ display:block; }
-
-@keyframes fadeUp{
-  from{ opacity:0; transform:translateY(8px); }
-  to{ opacity:1; transform:translateY(0); }
-}
-
-.grid{
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap:14px;
-}
-@media (max-width: 900px){
-  .grid{ grid-template-columns: 1fr; }
-}
-
-.card{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:16px;
-}
-.card h3{
-  font-size:15px;
-  margin-bottom:8px;
-  color:var(--text);
-}
-.card p{
-  font-size:12px;
-  color:var(--muted);
-  line-height:1.7;
-}
-
-.notice{
-  margin-top:10px;
-  font-size:12px;
-  color:var(--muted);
-  line-height:1.6;
-}
-
-/* ===== Loading overlay ===== */
-.overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(238,242,247,.75);
-  backdrop-filter: blur(6px);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:999;
-}
-.loader{
-  width:min(420px, calc(100% - 40px));
-  background:white;
-  border-radius:18px;
-  box-shadow:0 20px 40px rgba(0,0,0,0.12);
-  padding:18px 18px 16px;
-  border:1px solid var(--border);
-}
-.loader h3{ font-size:16px; color:var(--text); }
-.loader p{
-  margin-top:6px;
-  font-size:12px;
-  color:var(--muted);
-  line-height:1.6;
-}
-.barWrap{
-  margin-top:12px;
-  height:10px;
-  background:var(--border);
-  border-radius:999px;
-  overflow:hidden;
-}
-.bar{
-  height:10px;
-  width:0%;
-  background:var(--primary);
-  border-radius:999px;
-  transition:width .22s ease;
-}
-
-/* ===== Mobile drawer behavior ===== */
-.drawerBackdrop{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(17,24,39,.38);
-  z-index:998;
-}
-
-@media (max-width: 900px){
-  .hamburger{ display:flex; }
-
-  /* Sidebar becomes drawer */
-  .sidebar{
-    position:fixed;
-    top:0;
-    left:0;
-    height:100vh;
-    width: 86vw;
-    max-width: 320px;
-    border-radius:0 18px 18px 0;
-    transform:translateX(-102%);
-    transition:transform .22s ease;
-    z-index:999;
-    box-shadow: 0 20px 60px rgba(0,0,0,.25);
-  }
-  .sidebar.open{
-    transform:translateX(0);
-  }
-  .drawerBackdrop.show{
-    display:block;
-  }
-}
-</style>
-</head>
-
-<body>
-
-<!-- Loading Overlay -->
-<div class="overlay" id="overlay">
-  <div class="loader">
-    <h3 id="loadTitle">載入中…</h3>
-    <p id="loadText">正在初始化系統</p>
-    <div class="barWrap"><div class="bar" id="loadBar"></div></div>
+<nav class="nav" id="nav">
+  <!-- 1 􀎞：總覽 -->
+  <div class="navbtn active" data-target="home">
+    <div class="icon">
+      <!-- house -->
+      <svg viewBox="0 0 24 24">
+        <path d="M3 10.5L12 3l9 7.5"></path>
+        <path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"></path>
+      </svg>
+    </div>
+    <div class="navlabel">
+      <b>總覽</b>
+      <span>本學期狀態與提醒</span>
+    </div>
   </div>
-</div>
 
-<!-- Mobile drawer backdrop -->
-<div class="drawerBackdrop" id="drawerBackdrop"></div>
-
-<div class="app" id="app" style="display:none;">
-  <!-- Sidebar -->
-  <aside class="sidebar" id="sidebar">
-    <div class="brand">
-      <img src="./schoolbadge.gif" alt="校徽">
-      <div>
-        <h1>校專車路隊長管理系統</h1>
-        <p>TEAMLEADER SYSTEM</p>
-      </div>
+  <!-- 2 􀈧：匯入 -->
+  <div class="navbtn" data-target="import">
+    <div class="icon">
+      <!-- tray and arrow up -->
+      <svg viewBox="0 0 24 24">
+        <path d="M12 3v10"></path>
+        <path d="M8 7l4-4 4 4"></path>
+        <path d="M4 14h4l2 3h4l2-3h4"></path>
+        <path d="M4 14v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"></path>
+      </svg>
     </div>
-
-    <nav class="nav" id="nav">
-      <div class="navbtn active" data-target="home">
-        <div class="icon">🏠</div>
-        <div class="navlabel">
-          <b>總覽</b>
-          <span>本學期狀態與提醒</span>
-        </div>
-      </div>
-
-      <div class="navbtn" data-target="import">
-        <div class="icon">⬆️</div>
-        <div class="navlabel">
-          <b>匯入中心</b>
-          <span>學生/車表/名單</span>
-        </div>
-      </div>
-
-      <div class="navbtn" data-target="violation">
-        <div class="icon">📝</div>
-        <div class="navlabel">
-          <b>違規登記</b>
-          <span>登記與彙整</span>
-        </div>
-      </div>
-
-      <div class="navbtn" data-target="query">
-        <div class="icon">🔎</div>
-        <div class="navlabel">
-          <b>查詢</b>
-          <span>學生/車長資料</span>
-        </div>
-      </div>
-
-      <div class="navbtn" data-target="audit">
-        <div class="icon">🧾</div>
-        <div class="navlabel">
-          <b>操作紀錄</b>
-          <span>依時間序搜尋</span>
-        </div>
-      </div>
-
-      <div class="navbtn" data-target="settings">
-        <div class="icon">⚙️</div>
-        <div class="navlabel">
-          <b>系統設定</b>
-          <span>學期/權限/封存</span>
-        </div>
-      </div>
-    </nav>
-
-    <div class="sidefoot">
-      <div class="small" id="semesterHint">學期：讀取中…</div>
-      <button class="logout" id="btnLogout">登出</button>
-      <div class="small" style="margin-top:10px;color:#9ca3af;">© TeamLeader</div>
+    <div class="navlabel">
+      <b>匯入中心</b>
+      <span>學生/車表/名單</span>
     </div>
-  </aside>
+  </div>
 
-  <!-- Main -->
-  <main class="main">
-    <div class="topbar">
-      <div class="leftTop">
-        <!-- Mobile hamburger -->
-        <button class="hamburger" id="btnHamburger" aria-label="開啟選單">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-               stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 6h16"></path>
-            <path d="M4 12h16"></path>
-            <path d="M4 18h16"></path>
-          </svg>
-        </button>
-
-        <div class="pageTitle">
-          <h2 id="pageTitle">總覽</h2>
-          <p id="pageSub">本學期狀態與提醒</p>
-        </div>
-      </div>
-
-      <div class="userbox">
-        <div class="userdot"></div>
-        <div class="userinfo">
-          <b id="userLine1">讀取中…</b>
-          <span id="userLine2">—</span>
-        </div>
-      </div>
+  <!-- 3 􂹚：違規登記 -->
+  <div class="navbtn" data-target="violation">
+    <div class="icon">
+      <!-- pencil -->
+      <svg viewBox="0 0 24 24">
+        <path d="M12 20h9"></path>
+        <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4 11.5-11.5z"></path>
+      </svg>
     </div>
+    <div class="navlabel">
+      <b>違規登記</b>
+      <span>登記與彙整</span>
+    </div>
+  </div>
 
-    <section class="section active" id="sec-home">
-      <div class="grid">
-        <div class="card">
-          <h3>本學期資料狀態</h3>
-          <p id="homeStatus">正在讀取…</p>
-          <div class="notice" id="homeNotice"></div>
-        </div>
-        <div class="card">
-          <h3>快速提醒</h3>
-          <p>後續會把「匯入版本時間」、「名單缺漏警告」、「停駛提醒」放在這裡。</p>
-        </div>
-      </div>
-    </section>
+  <!-- 4 􀊫：查詢 -->
+  <div class="navbtn" data-target="query">
+    <div class="icon">
+      <!-- magnifying glass -->
+      <svg viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7"></circle>
+        <path d="M21 21l-4.3-4.3"></path>
+      </svg>
+    </div>
+    <div class="navlabel">
+      <b>查詢</b>
+      <span>學生/車長資料</span>
+    </div>
+  </div>
 
-    <section class="section" id="sec-import">
-      <div class="card">
-        <h3>匯入中心</h3>
-        <p>下一步會先做「匯入學生名單」與「匯入車表」。目前先把入口做出來。</p>
-      </div>
-    </section>
+  <!-- 5 􂷼：操作紀錄 -->
+  <div class="navbtn" data-target="audit">
+    <div class="icon">
+      <!-- list/clock style -->
+      <svg viewBox="0 0 24 24">
+        <path d="M8 6h13"></path>
+        <path d="M8 12h13"></path>
+        <path d="M8 18h13"></path>
+        <path d="M3.5 6h.01"></path>
+        <path d="M3.5 12h.01"></path>
+        <path d="M3.5 18h.01"></path>
+      </svg>
+    </div>
+    <div class="navlabel">
+      <b>操作紀錄</b>
+      <span>依時間序搜尋</span>
+    </div>
+  </div>
 
-    <section class="section" id="sec-violation">
-      <div class="card">
-        <h3>違規登記</h3>
-        <p>下一步會做：單一輸入欄位（學號/班座/模糊查）＋違規事件建立＋列印通知單流程。</p>
-      </div>
-    </section>
-
-    <section class="section" id="sec-query">
-      <div class="card">
-        <h3>查詢</h3>
-        <p>之後依身份顯示不同欄位（學生只能看自己；幹部/行政可查全部）。</p>
-      </div>
-    </section>
-
-    <section class="section" id="sec-audit">
-      <div class="card">
-        <h3>操作紀錄</h3>
-        <p>所有操作按時間序混在一起，可搜尋「誰做了什麼事」。</p>
-      </div>
-    </section>
-
-    <section class="section" id="sec-settings">
-      <div class="card">
-        <h3>系統設定</h3>
-        <p>超級管理員發放權限、學期封存/切換、封存資料區查詢。</p>
-      </div>
-    </section>
-
-  </main>
-</div>
-
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
-
-<script>
-/* ===== Firebase init ===== */
-const firebaseConfig = {
-  apiKey: "AIzaSyAXgHiQ-Kh6cv4kkOFuHVCUOwD-C1HoUQI",
-  authDomain: "teamleader-system.firebaseapp.com",
-  projectId: "teamleader-system",
-};
-firebase.initializeApp(firebaseConfig);
-
-const auth = firebase.auth();
-const db = firebase.firestore();
-
-/* ===== UI refs ===== */
-const overlay = document.getElementById("overlay");
-const loadTitle = document.getElementById("loadTitle");
-const loadText  = document.getElementById("loadText");
-const loadBar   = document.getElementById("loadBar");
-const app       = document.getElementById("app");
-
-const semesterHint = document.getElementById("semesterHint");
-
-const userLine1 = document.getElementById("userLine1");
-const userLine2 = document.getElementById("userLine2");
-
-const homeStatus = document.getElementById("homeStatus");
-const homeNotice = document.getElementById("homeNotice");
-
-/* mobile drawer */
-const sidebar = document.getElementById("sidebar");
-const backdrop = document.getElementById("drawerBackdrop");
-const btnHamburger = document.getElementById("btnHamburger");
-
-/* ===== Helpers ===== */
-function setOverlay(t1, t2, p){
-  loadTitle.textContent = t1;
-  loadText.textContent  = t2;
-  loadBar.style.width   = (p || 0) + "%";
-}
-
-function showApp(){
-  app.style.display = "grid";
-  overlay.style.display = "none";
-}
-
-/* ===== Drawer open/close ===== */
-function openDrawer(){
-  sidebar.classList.add("open");
-  backdrop.classList.add("show");
-}
-function closeDrawer(){
-  sidebar.classList.remove("open");
-  backdrop.classList.remove("show");
-}
-btnHamburger.addEventListener("click", openDrawer);
-backdrop.addEventListener("click", closeDrawer);
-
-/* ===== Navigation ===== */
-function activate(target){
-  document.querySelectorAll(".navbtn").forEach(b=>{
-    b.classList.toggle("active", b.dataset.target === target);
-  });
-  document.querySelectorAll(".section").forEach(s=>{
-    s.classList.toggle("active", s.id === "sec-" + target);
-  });
-
-  const map = {
-    home: ["總覽","本學期狀態與提醒"],
-    import: ["匯入中心","學生/車表/名單"],
-    violation: ["違規登記","登記與彙整"],
-    query: ["查詢","學生/車長資料"],
-    audit: ["操作紀錄","依時間序搜尋"],
-    settings: ["系統設定","學期/權限/封存"],
-  };
-  document.getElementById("pageTitle").textContent = map[target][0];
-  document.getElementById("pageSub").textContent   = map[target][1];
-
-  // 手機點選後自動收起，避免複雜
-  closeDrawer();
-}
-
-document.getElementById("nav").addEventListener("click", (e)=>{
-  const btn = e.target.closest(".navbtn");
-  if(!btn) return;
-  activate(btn.dataset.target);
-});
-
-/* ===== Logout ===== */
-document.getElementById("btnLogout").onclick = async ()=>{
-  await auth.signOut();
-  window.location.href = "index.html";
-};
-
-/* ===== Auth gate + load profile + semester ===== */
-auth.onAuthStateChanged(async (user)=>{
-  if(!user){
-    window.location.href = "index.html";
-    return;
-  }
-
-  overlay.style.display = "flex";
-  setOverlay("載入中…","正在驗證登入狀態", 18);
-
-  // 讀取學期
-  setOverlay("載入中…","正在讀取學期資料", 42);
-  let semesterId = "";
-  try{
-    const settingsDoc = await db.collection("settings").doc("global").get();
-    semesterId = String(settingsDoc.get("active_semester_id") || "");
-  }catch(e){
-    semesterId = "";
-  }
-  semesterHint.textContent = "學期：" + (semesterId || "未設定");
-
-  // 讀取使用者資料（職稱+姓名+enabled）
-  setOverlay("載入中…","正在載入使用者資料", 72);
-  const uDoc = await db.collection("users").doc(user.uid).get();
-  const u = uDoc.exists ? uDoc.data() : null;
-
-  // 未開通 → 強制登出（避免繞過）
-  if(!u || u.enabled !== true){
-    await auth.signOut();
-    window.location.href = "index.html";
-    return;
-  }
-
-  const title = u.title || "未設定職稱";
-  const name  = u.name  || "";
-  userLine1.textContent = `${title}｜${name || (user.email || "")}`;
-  userLine2.textContent = user.email || "";
-
-  setOverlay("準備完成","正在進入系統", 92);
-
-  homeStatus.textContent = "已登入，可開始操作。";
-  homeNotice.textContent = "提示：學生端資料將顯示「依總務處為準」提醒。";
-
-  setTimeout(showApp, 220);
-});
-</script>
-
-</body>
-</html>
+  <!-- 6 􀣺：系統設定 -->
+  <div class="navbtn" data-target="settings">
+    <div class="icon">
+      <!-- gear -->
+      <svg viewBox="0 0 24 24">
+        <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"></path>
+        <path d="M19.4 15a7.7 7.7 0 0 0 .1-1l2-1.2-2-3.5-2.3.6a7.5 7.5 0 0 0-1.7-1L15 4h-6l-.5 2.9a7.5 7.5 0 0 0-1.7 1L4.5 7.3l-2 3.5 2 1.2a7.7 7.7 0 0 0 0 2l-2 1.2 2 3.5 2.3-.6a7.5 7.5 0 0 0 1.7 1L9 20h6l.5-2.9a7.5 7.5 0 0 0 1.7-1l2.3.6 2-3.5-2.1-1.2z"></path>
+      </svg>
+    </div>
+    <div class="navlabel">
+      <b>系統設定</b>
+      <span>學期/權限/封存</span>
+    </div>
+  </div>
+</nav>
