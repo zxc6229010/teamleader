@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>權限管理｜校專車路隊長管理系統</title>
+<style>
+:root{
+  --primary:#0088FF;
+  --primary-dark:#0077E6;
+  --bg1:#eef2f7;
+  --bg2:#e5eaf2;
+  --text:#111827;
+  --muted:#6b7280;
+  --border:#eef2f7;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans TC",sans-serif;}
+body{background:linear-gradient(180deg,var(--bg1),var(--bg2));min-height:100vh;color:var(--text);}
+a{color:inherit;text-decoration:none;}
+.wrap{width:min(1200px,calc(100% - 32px));margin:22px auto 26px;}
+.card{
+  background:#fff;border:1px solid var(--border);border-radius:18px;padding:16px;
+  box-shadow:0 20px 40px rgba(0,0,0,.08);
+}
+.top{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+  padding-bottom:12px;border-bottom:1px solid var(--border);margin-bottom:12px;
+}
+.h1{display:flex;flex-direction:column;gap:6px;}
+.h1 h1{font-size:18px;}
+.h1 p{font-size:12px;color:var(--muted);letter-spacing:1px;}
+.btn{
+  padding:10px 14px;border-radius:14px;border:none;background:var(--primary);
+  color:#fff;font-weight:900;cursor:pointer;
+}
+.btn:hover{background:var(--primary-dark);}
+.btn2{
+  padding:10px 14px;border-radius:14px;border:1px solid var(--border);background:#fff;
+  color:var(--primary);font-weight:900;cursor:pointer;
+}
+.btn2:hover{border-color:#dbe5f5;background:#f9fafb;}
+.grid{display:grid;grid-template-columns: 1fr 1fr;gap:14px;margin-top:12px;}
+@media (max-width: 900px){ .grid{grid-template-columns:1fr;} }
+.field{display:flex;flex-direction:column;gap:6px;}
+.field label{font-size:12px;color:var(--muted);}
+.field input{
+  padding:10px 12px;border-radius:14px;border:1px solid var(--border);
+  background:#f9fafb;font-size:13px;
+}
+.field input:focus{outline:none;border-color:#cfe3ff;background:#fff;}
+.small{font-size:12px;color:var(--muted);line-height:1.6;}
+.list{margin-top:12px;border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.row{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:12px 12px;border-top:1px solid var(--border);cursor:pointer;
+}
+.row:first-child{border-top:none;}
+.row:hover{background:#f9fafb;}
+.row.active{background:rgba(0,136,255,.08);}
+.left{display:flex;flex-direction:column;gap:2px;}
+.left b{font-size:13px;}
+.left span{font-size:12px;color:var(--muted);}
+.pill{
+  display:inline-flex;align-items:center;gap:8px;padding:6px 10px;
+  border:1px solid var(--border);border-radius:999px;background:#fff;
+  font-size:12px;color:var(--muted);
+}
+.formRow{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-top:12px;}
+.box{
+  margin-top:12px;padding:12px 14px;border:1px solid var(--border);
+  border-radius:14px;background:#f9fafb;font-size:12px;color:var(--muted);line-height:1.7;
+}
+.kv{display:grid;grid-template-columns: 140px 1fr;gap:10px;align-items:center;margin-top:10px;}
+.kv b{font-size:12px;color:var(--muted);font-weight:800;}
+.chk{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;border:1px solid var(--border);background:#fff;}
+.chk input{transform:scale(1.15);}
+.hr{margin-top:12px;border-top:1px solid var(--border);}
+.toast{margin-top:12px;padding:12px 14px;border:1px solid var(--border);border-radius:14px;background:#fff;font-size:12px;}
+.toast.ok{color:#16a34a;font-weight:900;}
+.toast.err{color:#b91c1c;font-weight:900;}
+/* loading overlay */
+.overlay{
+  position:fixed;inset:0;background:rgba(238,242,247,.75);backdrop-filter: blur(6px);
+  display:flex;align-items:center;justify-content:center;z-index:999;
+}
+.loader{
+  width:min(460px, calc(100% - 40px));
+  background:white;border-radius:18px;box-shadow:0 20px 40px rgba(0,0,0,0.12);
+  padding:18px;border:1px solid var(--border);
+}
+.loader h3{font-size:16px;}
+.loader p{margin-top:6px;font-size:12px;color:var(--muted);line-height:1.6;}
+.barWrap{margin-top:12px;height:10px;background:var(--border);border-radius:999px;overflow:hidden;}
+.bar{height:10px;width:0%;background:var(--primary);border-radius:999px;transition:width .22s ease;}
+.steps{margin-top:10px;font-size:12px;color:var(--muted);line-height:1.7;}
+.steps b{color:#111827;}
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay">
+  <div class="loader">
+    <h3 id="loadTitle">載入中…</h3>
+    <p id="loadText">正在初始化權限管理</p>
+    <div class="barWrap"><div class="bar" id="loadBar"></div></div>
+    <div class="steps" id="loadSteps">—</div>
+  </div>
+</div>
+
+<div class="wrap" style="display:none;" id="app">
+  <div class="card">
+    <div class="top">
+      <div class="h1">
+        <h1>權限管理</h1>
+        <p>只限超級管理員｜管理所有人的 roles / permissions</p>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;">
+        <button class="btn2" id="btnBack">回 Dashboard</button>
+        <button class="btn" id="btnLogout">登出</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- left: list -->
+      <div>
+        <div class="field">
+          <label>搜尋使用者（UID / email / 姓名 / 職稱）</label>
+          <input id="q" placeholder="例如：劉 / super / @gmail / JTyc..." />
+        </div>
+
+        <div class="box" id="stat">正在讀取使用者清單…</div>
+
+        <div class="list" id="userList"></div>
+      </div>
+
+      <!-- right: editor -->
+      <div>
+        <div class="box">
+          <b style="color:#111827;">使用者編輯</b><br>
+          先在左側點選一個使用者，右側會顯示可調整的 roles / permissions。
+        </div>
+
+        <div class="box" id="who">尚未選擇使用者。</div>
+
+        <div class="hr"></div>
+
+        <div id="editor" style="display:none;">
+          <div class="kv">
+            <b>UID</b><div id="edUid">—</div>
+            <b>Email</b><div id="edEmail">—</div>
+            <b>姓名</b><div><input id="edName" style="width:100%;" /></div>
+            <b>職稱</b><div><input id="edTitle" style="width:100%;" /></div>
+            <b>啟用</b>
+            <div class="chk"><input type="checkbox" id="edEnabled" /><span>enabled</span></div>
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="box">
+            <b style="color:#111827;">Roles</b>
+            <div class="formRow" id="rolesBox"></div>
+          </div>
+
+          <div class="box">
+            <b style="color:#111827;">Permissions</b>
+            <div class="formRow" id="permsBox"></div>
+          </div>
+
+          <div class="formRow">
+            <button class="btn" id="btnSave">儲存</button>
+            <button class="btn2" id="btnReload">重新載入此人</button>
+          </div>
+
+          <div class="toast" id="msg">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+
+<script>
+/* Firebase */
+const firebaseConfig = {
+  apiKey: "AIzaSyAXgHiQ-Kh6cv4kkOFuHVCUOwD-C1HoUQI",
+  authDomain: "teamleader-system.firebaseapp.com",
+  projectId: "teamleader-system",
+};
+if (!firebase.apps || !firebase.apps.length) firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+/* loading ui */
+const overlay = document.getElementById("overlay");
+const loadTitle = document.getElementById("loadTitle");
+const loadText  = document.getElementById("loadText");
+const loadBar   = document.getElementById("loadBar");
+const loadSteps = document.getElementById("loadSteps");
+const app = document.getElementById("app");
+
+function setLoad(p, title, text, steps){
+  loadBar.style.width = Math.max(0, Math.min(100, p)) + "%";
+  if(title) loadTitle.textContent = title;
+  if(text) loadText.textContent = text;
+  if(steps) loadSteps.innerHTML = steps;
+}
+function showApp(){
+  app.style.display = "block";
+  overlay.style.display = "none";
+}
+function withTimeout(promise, ms, label){
+  return new Promise((resolve, reject)=>{
+    const t = setTimeout(()=>reject(new Error(`timeout:${label}:${ms}ms`)), ms);
+    Promise.resolve(promise).then(v=>{clearTimeout(t);resolve(v)}, e=>{clearTimeout(t);reject(e)});
+  });
+}
+
+/* ui */
+document.getElementById("btnBack").onclick = ()=> location.href = "dashboard.html";
+document.getElementById("btnLogout").onclick = async ()=>{ await auth.signOut(); location.href="index.html"; };
+
+const q = document.getElementById("q");
+const stat = document.getElementById("stat");
+const userList = document.getElementById("userList");
+
+const editor = document.getElementById("editor");
+const who = document.getElementById("who");
+const edUid = document.getElementById("edUid");
+const edEmail = document.getElementById("edEmail");
+const edName = document.getElementById("edName");
+const edTitle = document.getElementById("edTitle");
+const edEnabled = document.getElementById("edEnabled");
+const rolesBox = document.getElementById("rolesBox");
+const permsBox = document.getElementById("permsBox");
+const msg = document.getElementById("msg");
+const btnSave = document.getElementById("btnSave");
+const btnReload = document.getElementById("btnReload");
+
+let ME = null;
+let ME_DATA = null;
+let USERS = []; // {id, data}
+let ACTIVE = null; // active user id
+
+function isSuperAdmin(){
+  return ME_DATA?.roles?.superAdmin === true;
+}
+
+function makeChk(id, label){
+  const div = document.createElement("label");
+  div.className = "chk";
+  div.style.minWidth = "220px";
+  div.innerHTML = `<input type="checkbox" data-k="${id}"><span>${label}</span>`;
+  return div;
+}
+
+function renderList(){
+  const s = (q.value||"").trim().toLowerCase();
+  const items = USERS.filter(u=>{
+    if(!s) return true;
+    const d = u.data || {};
+    const hay = [
+      u.id,
+      d.email || "",
+      d.name || "",
+      d.title || "",
+    ].join(" ").toLowerCase();
+    return hay.includes(s);
+  });
+
+  userList.innerHTML = "";
+  if(items.length === 0){
+    const empty = document.createElement("div");
+    empty.className = "row";
+    empty.innerHTML = `<div class="left"><b>找不到資料</b><span>請換關鍵字</span></div><span class="pill">—</span>`;
+    userList.appendChild(empty);
+    return;
+  }
+
+  items.forEach(u=>{
+    const d = u.data || {};
+    const row = document.createElement("div");
+    row.className = "row" + (u.id === ACTIVE ? " active" : "");
+    const enabled = d.enabled === true;
+    const roleTag = d.roles?.superAdmin ? "superAdmin" :
+                    d.roles?.admin ? "admin" :
+                    d.roles?.staff ? "staff" :
+                    d.roles?.busLeader ? "busLeader" :
+                    d.roles?.student ? "student" : "—";
+    row.innerHTML = `
+      <div class="left">
+        <b>${d.title || "未設定職稱"}｜${d.name || d.email || u.id}</b>
+        <span>${d.email || "—"}｜${u.id}</span>
+      </div>
+      <span class="pill">${enabled ? "啟用" : "停用"}｜${roleTag}</span>
+    `;
+    row.onclick = ()=> selectUser(u.id);
+    userList.appendChild(row);
+  });
+}
+
+function renderEditor(u){
+  const d = u.data || {};
+  editor.style.display = "block";
+  who.innerHTML = `<b style="color:#111827;">目前編輯：</b>${d.title || "未設定"}｜${d.name || "—"}（${u.id}）`;
+
+  edUid.textContent = u.id;
+  edEmail.textContent = d.email || "—";
+  edName.value = d.name || "";
+  edTitle.value = d.title || "";
+  edEnabled.checked = d.enabled === true;
+
+  // Roles（你現在 users 文件就是 roles: {admin:true...}）
+  const roleKeys = ["superAdmin","admin","staff","busLeader","student"];
+  rolesBox.innerHTML = "";
+  roleKeys.forEach(k=>{
+    const label = ({superAdmin:"超級管理員", admin:"高級管理員/行政", staff:"幹部", busLeader:"車長", student:"學生"})[k] || k;
+    const el = makeChk(k, "roles." + k + "｜" + label);
+    el.querySelector("input").checked = d.roles?.[k] === true;
+    el.querySelector("input").dataset.kind = "role";
+    rolesBox.appendChild(el);
+  });
+
+  // Permissions（你目前是 permissions: {"admin.editViolations": true, ...}）
+  // 這裡先把你常用的都列出來，之後你新增再加
+  const permDefs = [
+    ["admin.editViolations","可編輯違規（管理）"],
+    ["admin.exportReports","可匯出報表（管理）"],
+    ["admin.viewAllViolations","可查看全部違規（管理）"],
+    ["admin.editAnnouncements","可發佈公告（你要派發的）"],
+    ["busLeader.reportViolation","車長可回報違規"],
+    ["staff.printViolationForms","幹部可列印違規單"],
+    ["staff.recordViolation","幹部可登記違規"],
+    ["staff.voidViolation","幹部可銷除違規（需原因）"],
+    ["student.viewSelf","學生只能看自己"],
+  ];
+  permsBox.innerHTML = "";
+  permDefs.forEach(([k, label])=>{
+    const el = makeChk(k, "permissions." + k + "｜" + label);
+    el.querySelector("input").checked = d.permissions?.[k] === true;
+    el.querySelector("input").dataset.kind = "perm";
+    permsBox.appendChild(el);
+  });
+
+  msg.className = "toast";
+  msg.textContent = "—";
+}
+
+async function selectUser(uid){
+  ACTIVE = uid;
+  renderList();
+
+  const snap = await withTimeout(db.collection("users").doc(uid).get(), 8000, "users/get");
+  if(!snap.exists){
+    editor.style.display = "none";
+    who.textContent = "找不到該使用者。";
+    return;
+  }
+  const u = {id: uid, data: snap.data()};
+  renderEditor(u);
+}
+
+function collectEdits(){
+  // roles / permissions
+  const roles = {};
+  rolesBox.querySelectorAll("input[type=checkbox]").forEach(i=>{
+    roles[i.dataset.k] = i.checked;
+  });
+
+  const permissions = {};
+  permsBox.querySelectorAll("input[type=checkbox]").forEach(i=>{
+    permissions[i.dataset.k] = i.checked;
+  });
+
+  return {
+    enabled: edEnabled.checked,
+    name: edName.value.trim(),
+    title: edTitle.value.trim(),
+    roles,
+    permissions,
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    updatedBy: ME?.uid || "",
+    updatedByEmail: ME?.email || "",
+  };
+}
+
+btnSave.onclick = async ()=>{
+  try{
+    if(!ACTIVE) return;
+    msg.className = "toast";
+    msg.textContent = "儲存中…";
+    await withTimeout(db.collection("users").doc(ACTIVE).set(collectEdits(), {merge:true}), 8000, "users/set");
+    msg.className = "toast ok";
+    msg.textContent = "✅ 已儲存";
+
+    // reload list cache
+    const s = await db.collection("users").doc(ACTIVE).get();
+    USERS = USERS.map(u=> u.id === ACTIVE ? ({id:u.id, data:s.data()}) : u);
+    renderList();
+  }catch(e){
+    console.error(e);
+    msg.className = "toast err";
+    msg.textContent = "❌ 儲存失敗：" + (e.message || String(e));
+  }
+};
+
+btnReload.onclick = async ()=>{
+  try{
+    if(!ACTIVE) return;
+    await selectUser(ACTIVE);
+    msg.className = "toast ok";
+    msg.textContent = "✅ 已重新載入";
+  }catch(e){
+    console.error(e);
+    msg.className = "toast err";
+    msg.textContent = "❌ 重新載入失敗：" + (e.message || String(e));
+  }
+};
+
+q.addEventListener("input", renderList);
+
+/* init */
+auth.onAuthStateChanged(async (user)=>{
+  try{
+    setLoad(8, "載入中…", "正在驗證登入狀態", "• 驗證登入…");
+    if(!user){ location.href="index.html"; return; }
+    ME = user;
+
+    setLoad(22, "載入中…", "正在讀取你的權限", "• 驗證登入…<br><b>• 讀取我的 users/{uid}…</b>");
+    const meDoc = await withTimeout(db.collection("users").doc(user.uid).get(), 8000, "users/me");
+    ME_DATA = meDoc.exists ? meDoc.data() : null;
+
+    if(!ME_DATA || ME_DATA.enabled !== true || !isSuperAdmin()){
+      alert("你沒有權限進入【權限管理】（需要 superAdmin）");
+      location.href = "dashboard.html";
+      return;
+    }
+
+    setLoad(55, "載入中…", "正在載入使用者清單", "• 讀取我的權限…<br><b>• 讀取 users 清單…</b>");
+    const snaps = await withTimeout(db.collection("users").limit(300).get(), 12000, "users/list");
+    USERS = snaps.docs.map(d=>({id:d.id, data:d.data()}));
+    stat.textContent = `已載入 ${USERS.length} 位使用者。點選左側即可編輯。`;
+
+    setLoad(90, "準備完成", "正在進入權限管理", "• 完成");
+    setTimeout(showApp, 180);
+    renderList();
+  }catch(e){
+    console.error(e);
+    setLoad(100, "載入失敗", "請開 Console 查看錯誤", "❌ " + (e.message || String(e)));
+    setTimeout(showApp, 600);
+  }
+});
+</script>
+</body>
+</html>

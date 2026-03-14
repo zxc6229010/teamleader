@@ -1,0 +1,959 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>校專車路隊長管理系統｜用戶管理</title>
+
+<style>
+:root{
+  --primary:#0088FF;
+  --primary-dark:#0077E6;
+  --bg1:#eef2f7;
+  --bg2:#e5eaf2;
+  --text:#111827;
+  --muted:#6b7280;
+  --border:#eef2f7;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans TC",sans-serif;}
+body{background:linear-gradient(180deg,var(--bg1),var(--bg2));min-height:100vh;color:var(--text);}
+a{ color:inherit; text-decoration:none; }
+
+.app{
+  width:min(1200px, calc(100% - 32px));
+  margin:22px auto 26px;
+  display:grid;
+  grid-template-columns: 280px 1fr;
+  gap:18px;
+  align-items:stretch;
+}
+@media (max-width: 900px){
+  .app{ grid-template-columns:1fr; width:calc(100% - 20px); margin:14px auto 18px; }
+}
+
+/* ===== Sidebar ===== */
+.sidebar{
+  background:white;border-radius:18px;box-shadow:0 20px 40px rgba(0,0,0,0.08);
+  padding:18px 16px;position:sticky;top:18px;height: calc(100vh - 36px);overflow:auto;
+}
+.brand{display:flex;gap:12px;align-items:center;padding:10px 10px 14px;border-bottom:1px solid var(--border);margin-bottom:12px;}
+.brand img{width:42px;height:42px;border-radius:12px;background:#f3f4f6;}
+.brand h1{font-size:16px;font-weight:800;color:#1f2937;line-height:1.2;}
+.brand p{font-size:11px;color:var(--muted);letter-spacing:2px;margin-top:3px;}
+
+.nav{margin-top:10px;display:flex;flex-direction:column;gap:6px;}
+.navbtn{display:flex;align-items:center;gap:10px;padding:12px 12px;border-radius:14px;cursor:pointer;user-select:none;transition:all .15s ease;border:1px solid transparent;}
+.navbtn:hover{background:#f9fafb;border-color:var(--border);}
+.navbtn.active{background:var(--primary);color:white;}
+.icon{width:34px;height:34px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(0,136,255,0.12);color:var(--primary);font-weight:800;}
+.navbtn.active .icon{background:rgba(255,255,255,.22);color:white;}
+.navlabel{display:flex;flex-direction:column;gap:2px;}
+.navlabel b{font-size:14px;}
+.navlabel span{font-size:12px;opacity:.9;}
+.sidefoot{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);}
+.small{font-size:12px;color:var(--muted);line-height:1.6;}
+.logout{margin-top:10px;width:100%;padding:12px;border-radius:14px;border:none;background:var(--primary);color:white;font-weight:800;cursor:pointer;transition:all .2s ease;}
+.logout:hover{background:var(--primary-dark);}
+
+/* ===== Main ===== */
+.main{
+  background:white;border-radius:18px;box-shadow:0 20px 40px rgba(0,0,0,0.08);
+  padding:18px 18px 22px;overflow:hidden;
+}
+.topbar{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+  border-bottom:1px solid var(--border);padding-bottom:14px;margin-bottom:16px;
+}
+.leftTop{display:flex;align-items:flex-start;gap:10px;}
+.hamburger{
+  display:none;width:44px;height:44px;border-radius:14px;border:1px solid var(--border);
+  background:#f9fafb;cursor:pointer;align-items:center;justify-content:center;transition:.15s ease;
+}
+.hamburger:hover{border-color:#dbe5f5;background:#fff;}
+.hamburger svg{width:22px;height:22px;}
+@media (max-width: 900px){ .hamburger{display:flex;} }
+
+.pageTitle{display:flex;flex-direction:column;gap:4px;}
+.pageTitle h2{font-size:18px;color:var(--text);}
+.pageTitle p{font-size:12px;color:var(--muted);letter-spacing:1px;}
+
+.userbox{
+  display:flex;align-items:center;gap:10px;background:#f9fafb;border:1px solid var(--border);
+  padding:10px 12px;border-radius:14px;min-width:220px;
+}
+.userdot{width:10px;height:10px;border-radius:50%;background:#16a34a;}
+.userinfo{display:flex;flex-direction:column;gap:2px;}
+.userinfo b{font-size:13px;color:var(--text);}
+.userinfo span{font-size:12px;color:var(--muted);}
+
+.card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:16px;}
+.card h3{font-size:15px;margin-bottom:8px;color:var(--text);}
+.card p{font-size:12px;color:var(--muted);line-height:1.7;}
+.mutedBox{margin-top:12px;padding:12px 14px;border:1px solid var(--border);border-radius:14px;background:#f9fafb;font-size:12px;color:var(--muted);line-height:1.7;}
+
+.formRow{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;}
+.field{display:flex;flex-direction:column;gap:6px;}
+.field label{font-size:12px;color:var(--muted);}
+.field input,.field select{
+  padding:10px 12px;border-radius:14px;border:1px solid var(--border);background:#f9fafb;font-size:13px;
+}
+.field input:focus,.field select:focus{outline:none;border-color:#cfe3ff;background:#fff;}
+.primaryBtn{padding:10px 14px;border-radius:14px;border:none;background:var(--primary);color:#fff;font-weight:900;cursor:pointer;}
+.primaryBtn:hover{background:var(--primary-dark);}
+.miniBtn{padding:7px 10px;border-radius:12px;border:1px solid var(--border);background:#fff;cursor:pointer;font-size:12px;color:var(--primary);font-weight:800;}
+.miniBtn:hover{border-color:#dbe5f5;background:#f9fafb;}
+.badge{
+  display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid var(--border);
+  border-radius:999px;background:#f9fafb;font-size:12px;color:var(--muted);
+}
+.tableWrap{margin-top:12px;border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+table{width:100%;border-collapse:collapse;}
+th,td{padding:10px 12px;font-size:12px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top;}
+th{background:#f9fafb;color:#374151;font-weight:900;}
+tr:hover td{background:#fbfdff;}
+td .muted{color:var(--muted);}
+
+/* ===== Modal ===== */
+.overlay{
+  position:fixed;inset:0;background:rgba(17,24,39,.38);display:none;align-items:center;justify-content:center;z-index:999;
+}
+.modal{
+  width:min(860px, calc(100% - 24px));
+  max-height: calc(100vh - 24px);
+  overflow:auto;
+  background:#fff;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.25);border:1px solid var(--border);
+  padding:16px 16px 14px;
+}
+.modalTop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:12px;}
+.modalTop h3{font-size:16px;}
+.closeX{border:1px solid var(--border);background:#fff;border-radius:12px;padding:8px 10px;cursor:pointer;font-weight:900;color:var(--muted);}
+.closeX:hover{background:#f9fafb;border-color:#dbe5f5;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media (max-width:900px){ .grid2{grid-template-columns:1fr;} }
+.hr{border-top:1px dashed var(--border);margin:12px 0;}
+.kv{display:flex;flex-direction:column;gap:4px;font-size:12px;}
+.kv b{font-size:12px;color:#374151;}
+.kv span{color:var(--muted);line-height:1.6;}
+.chkRow{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;}
+.chk{display:flex;align-items:center;gap:8px;font-size:12px;color:#374151;}
+.chk input{transform:scale(1.05);}
+
+.qrBox{
+  margin-top:10px;border:1px solid var(--border);border-radius:16px;background:#f9fafb;padding:12px;
+}
+.qrLine{font-size:12px;color:var(--muted);line-height:1.7;word-break:break-all;}
+.qrCanvas{margin-top:10px;display:flex;justify-content:center;}
+
+/* ===== Loading overlay (page) ===== */
+.loadOverlay{
+  position:fixed; inset:0; z-index:2000;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(238,242,247,.72);
+  backdrop-filter: blur(10px);
+  transition: opacity .25s ease, visibility .25s ease;
+}
+.loadOverlay.hide{ opacity:0; visibility:hidden; pointer-events:none; }
+.loadPanel{
+  width:min(720px, calc(100% - 28px));
+  border-radius:22px;
+  background:rgba(255,255,255,.86);
+  border:1px solid rgba(229,234,242,.9);
+  box-shadow:0 28px 70px rgba(0,0,0,.18);
+  overflow:hidden;
+}
+.loadTopBar{ height:4px; background:rgba(238,242,247,.9); overflow:hidden; }
+.loadBar{
+  height:4px; width:12%;
+  background:linear-gradient(90deg, var(--primary), #47b1ff, var(--primary));
+  background-size:200% 100%;
+  animation: barGlow 1.2s linear infinite;
+  border-radius:0 999px 999px 0;
+  transition: width .18s ease;
+}
+@keyframes barGlow{ 0%{background-position:0% 50%;} 100%{background-position:200% 50%;} }
+.loadHeader{ display:flex; align-items:center; justify-content:space-between; padding:16px 18px 12px; }
+.loadHeader img{
+  width:44px; height:44px; border-radius:14px; background:#f3f4f6;
+  border:1px solid rgba(229,234,242,.9);
+}
+.loadSpin{
+  width:18px;height:18px;border-radius:50%;
+  border:2px solid rgba(0,136,255,.18);
+  border-top-color: rgba(0,136,255,.9);
+  animation: spin .8s linear infinite;
+}
+@keyframes spin{ to{ transform: rotate(360deg);} }
+.loadSkeleton{ padding:4px 18px 18px; }
+.skLine, .skCard{
+  position:relative; overflow:hidden;
+  background:rgba(238,242,247,.95);
+  border:1px solid rgba(229,234,242,.95);
+}
+.skLine{ height:12px; border-radius:999px; margin:10px 0; }
+.skGrid{ margin-top:14px; display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+@media (max-width:700px){ .skGrid{ grid-template-columns:1fr;} }
+.skCard{ border-radius:18px; padding:14px; min-height:120px; }
+.skLine::after, .skCard::after{
+  content:""; position:absolute; inset:0;
+  transform: translateX(-60%);
+  background: linear-gradient(90deg,
+    rgba(238,242,247,0) 0%,
+    rgba(255,255,255,.85) 45%,
+    rgba(238,242,247,0) 100%
+  );
+  animation: shimmer 1.1s ease-in-out infinite;
+}
+@keyframes shimmer{ 0%{transform:translateX(-65%);} 100%{transform:translateX(65%);} }
+.w60{width:60%;} .w85{width:85%;} .w72{width:72%;} .w40{width:40%;} .w90{width:90%;}
+.w70{width:70%;} .w55{width:55%;} .w35{width:35%;} .w92{width:92%;} .w68{width:68%;} .w58{width:58%;}
+
+/* ===== Mobile drawer (slide) ===== */
+.drawerBackdrop{
+  display:none;
+  position:fixed; inset:0;
+  background:rgba(17,24,39,.38);
+  z-index:998;
+}
+@media (max-width: 900px){
+  .sidebar{
+    position:fixed;
+    top:0; left:0;
+    height:100vh;
+    width: 86vw;
+    max-width: 320px;
+    border-radius:0 18px 18px 0;
+    transform:translateX(-102%);
+    transition:transform .22s ease;
+    z-index:999;
+    box-shadow: 0 20px 60px rgba(0,0,0,.25);
+  }
+  .sidebar.open{ transform:translateX(0); }
+  .drawerBackdrop.show{ display:block; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- Page Loading Overlay -->
+<div class="loadOverlay" id="loadOverlay" aria-hidden="false">
+  <div class="loadPanel">
+    <div class="loadTopBar"><div class="loadBar" id="loadBar"></div></div>
+    <div class="loadHeader">
+      <img src="./schoolbadge.gif" alt="logo">
+      <div class="loadSpin" aria-hidden="true"></div>
+    </div>
+    <div class="loadSkeleton">
+      <div class="skLine w60"></div>
+      <div class="skLine w85"></div>
+      <div class="skLine w72"></div>
+      <div class="skGrid">
+        <div class="skCard">
+          <div class="skLine w40"></div>
+          <div class="skLine w90"></div>
+          <div class="skLine w70"></div>
+          <div class="skLine w55"></div>
+        </div>
+        <div class="skCard">
+          <div class="skLine w35"></div>
+          <div class="skLine w92"></div>
+          <div class="skLine w68"></div>
+          <div class="skLine w58"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="drawerBackdrop" id="drawerBackdrop"></div>
+
+<div class="app" id="app" style="display:none;">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <img src="./schoolbadge.gif" alt="校徽">
+      <div>
+        <h1>校專車路隊長管理系統</h1>
+        <p>TEAMLEADER SYSTEM</p>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <div class="navbtn" onclick="location.href='dashboard.html'">
+        <div class="icon">🏠</div>
+        <div class="navlabel"><b>回到總覽</b><span>Dashboard</span></div>
+      </div>
+
+      <div class="navbtn active">
+        <div class="icon">👤</div>
+        <div class="navlabel"><b>用戶管理</b><span>帳號/身份/停用/重設</span></div>
+      </div>
+
+      <div class="navbtn" id="navPerms" style="display:none;" onclick="location.href='admin-permissions.html'">
+        <div class="icon">🔐</div>
+        <div class="navlabel"><b>權限管理</b><span>派發/控管功能權限</span></div>
+      </div>
+
+      <div class="navbtn" id="navAnn" style="display:none;" onclick="location.href='admin-announcements.html'">
+        <div class="icon">📢</div>
+        <div class="navlabel"><b>公告管理</b><span>跑馬燈/樣式/顯示頁面</span></div>
+      </div>
+
+      <div class="navbtn" id="navImp" style="display:none;" onclick="location.href='admin-impersonate.html'">
+        <div class="icon">🕵️</div>
+        <div class="navlabel"><b>模擬身份</b><span>免密登入測試頁面</span></div>
+      </div>
+    </nav>
+
+    <div class="sidefoot">
+      <div class="small" id="semesterHint">學期：讀取中…</div>
+      <button class="logout" id="btnLogout">登出</button>
+      <div class="small" style="margin-top:10px;color:#9ca3af;">© TeamLeader</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="leftTop">
+        <button class="hamburger" id="btnHamburger" aria-label="開啟選單">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 6h16"></path><path d="M4 12h16"></path><path d="M4 18h16"></path>
+          </svg>
+        </button>
+
+        <div class="pageTitle">
+          <h2>用戶管理</h2>
+          <p>管理行政 / 幹部 / 車長 / 學生（可多重身份）</p>
+        </div>
+      </div>
+
+      <div class="userbox">
+        <div class="userdot"></div>
+        <div class="userinfo">
+          <b id="meLine1">讀取中…</b>
+          <span id="meLine2">—</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>搜尋與篩選</h3>
+
+      <div class="formRow">
+        <div class="field" style="min-width:240px;flex:1;">
+          <label>搜尋（姓名 / Email / 學號 / 職稱）</label>
+          <input id="q" type="text" placeholder="輸入關鍵字">
+        </div>
+
+        <div class="field">
+          <label>身份</label>
+          <select id="roleFilter">
+            <option value="all">全部</option>
+            <option value="student">學生</option>
+            <option value="busLeader">車長</option>
+            <option value="staff">幹部</option>
+            <option value="admin">行政</option>
+            <option value="superAdmin">超級管理員</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>狀態</label>
+          <select id="enabledFilter">
+            <option value="all">全部</option>
+            <option value="enabled">已開通</option>
+            <option value="disabled">已停用/未開通</option>
+          </select>
+        </div>
+
+        <button class="primaryBtn" id="btnSearch">搜尋</button>
+      </div>
+
+      <div class="mutedBox" id="hint">
+        說明：列表只顯示必要欄位，每筆可按「查看」進入詳情（身份、權限、註冊資訊、重設密碼、停用等）。
+      </div>
+
+      <div class="tableWrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:200px;">姓名 / 職稱</th>
+              <th>帳號</th>
+              <th style="width:140px;">學號</th>
+              <th style="width:140px;">狀態</th>
+              <th style="width:120px;">操作</th>
+            </tr>
+          </thead>
+          <tbody id="tbody">
+            <tr><td colspan="5" class="muted">讀取中…</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="formRow" style="margin-top:12px;justify-content:flex-end;">
+        <span class="badge" id="countBadge">已載入：0</span>
+        <button class="miniBtn" id="btnMore" style="display:none;">載入更多</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Modal -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modalTop">
+      <div>
+        <h3>用戶詳情</h3>
+        <div class="badge" id="mUid">UID：—</div>
+      </div>
+      <button class="closeX" id="mClose">關閉</button>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3>基本資訊</h3>
+        <div class="kv"><b>姓名</b><span id="mName">—</span></div>
+        <div class="kv"><b>職稱</b><span id="mJob">—</span></div>
+        <div class="kv"><b>Email</b><span id="mEmail">—</span></div>
+        <div class="kv"><b>學號</b><span id="mStudentId">—</span></div>
+        <div class="kv"><b>班級座號</b><span id="mClassSeat">—</span></div>
+
+        <div class="hr"></div>
+
+        <div class="kv"><b>狀態</b><span id="mEnabled">—</span></div>
+        <div class="chkRow">
+          <button class="primaryBtn" id="btnToggleEnabled">切換啟用/停用</button>
+        </div>
+
+        <div class="mutedBox" style="margin-top:10px;">
+          注意：除超級管理員外，不允許刪除使用者，只能停用。<br>
+          學生忘記密碼：請用「產生重設條碼」（會導到 reset-password.html）。
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>身份（可多重）</h3>
+        <div class="chkRow" id="roleChecks"></div>
+
+        <div class="hr"></div>
+
+        <h3>權限（可多重）</h3>
+        <div class="chkRow" id="permChecks"></div>
+
+        <div style="margin-top:10px;">
+          <button class="primaryBtn" id="btnSave">儲存變更</button>
+        </div>
+
+        <div class="mutedBox" id="mSaveMsg" style="margin-top:10px;">尚未修改。</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px;">
+      <h3>註冊 / 登入資訊</h3>
+      <div class="grid2">
+        <div class="kv"><b>createdAt</b><span id="mCreatedAt">—</span></div>
+        <div class="kv"><b>lastLoginAt</b><span id="mLastLoginAt">—</span></div>
+        <div class="kv"><b>Auth creationTime</b><span id="mAuthCreate">—</span></div>
+        <div class="kv"><b>Auth lastSignInTime</b><span id="mAuthLast">—</span></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px;">
+      <h3>重設密碼（掃碼）</h3>
+      <p style="font-size:12px;color:var(--muted);line-height:1.7;">
+        產生後會建立短效 token。學生掃 QR 進 <b>reset-password.html</b> 自行設定新密碼。<br>
+        ※ 真的改密碼由 Cloud Function <b>resetPasswordWithToken</b> 執行。
+      </p>
+
+      <div class="chkRow" style="margin-top:10px;">
+        <button class="primaryBtn" id="btnGenReset">產生重設條碼</button>
+      </div>
+
+      <div class="qrBox" id="qrBox" style="display:none;">
+        <div class="qrLine"><b>重設連結：</b><span id="qrLinkText"></span></div>
+        <div class="qrLine">有效期限：<span id="qrExp"></span></div>
+        <div class="qrCanvas"><canvas id="qrCanvas"></canvas></div>
+        <div class="qrLine" style="margin-top:8px;color:#ef4444;" id="qrWarn"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+
+<script>
+/* ===== Firebase init ===== */
+const firebaseConfig = {
+  apiKey: "AIzaSyAXgHiQ-Kh6cv4kkOFuHVCUOwD-C1HoUQI",
+  authDomain: "teamleader-system.firebaseapp.com",
+  projectId: "teamleader-system",
+};
+if (!firebase.apps || !firebase.apps.length) firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+/* ===== loading progress ===== */
+const loadOverlay = document.getElementById("loadOverlay");
+const loadBar = document.getElementById("loadBar");
+let prog = 0;
+let progTimer = null;
+function startProgress(){
+  stopProgress();
+  prog = 8;
+  loadBar.style.width = prog + "%";
+  progTimer = setInterval(()=>{
+    if(prog < 92){
+      prog += Math.random()*3.2;
+      if(prog > 92) prog = 92;
+      loadBar.style.width = Math.floor(prog) + "%";
+    }
+  }, 180);
+}
+function stopProgress(){
+  if(progTimer){ clearInterval(progTimer); progTimer = null; }
+}
+async function finishEnter(){
+  stopProgress();
+  loadBar.style.width = "100%";
+  await new Promise(r=>setTimeout(r, 160));
+  loadOverlay.classList.add("hide");
+  await new Promise(r=>setTimeout(r, 260));
+  loadOverlay.style.display = "none";
+}
+
+/* ===== mobile drawer ===== */
+const sidebar = document.getElementById("sidebar");
+const backdrop = document.getElementById("drawerBackdrop");
+const btnHamburger = document.getElementById("btnHamburger");
+function openDrawer(){ sidebar.classList.add("open"); backdrop.classList.add("show"); }
+function closeDrawer(){ sidebar.classList.remove("open"); backdrop.classList.remove("show"); }
+btnHamburger.addEventListener("click", openDrawer);
+backdrop.addEventListener("click", closeDrawer);
+
+/* ===== UI refs ===== */
+const app = document.getElementById("app");
+const semesterHint = document.getElementById("semesterHint");
+const meLine1 = document.getElementById("meLine1");
+const meLine2 = document.getElementById("meLine2");
+
+const navAnn = document.getElementById("navAnn");
+const navPerms = document.getElementById("navPerms");
+const navImp = document.getElementById("navImp");
+
+const q = document.getElementById("q");
+const roleFilter = document.getElementById("roleFilter");
+const enabledFilter = document.getElementById("enabledFilter");
+const btnSearch = document.getElementById("btnSearch");
+const tbody = document.getElementById("tbody");
+const countBadge = document.getElementById("countBadge");
+const btnMore = document.getElementById("btnMore");
+
+document.getElementById("btnLogout").onclick = async ()=>{
+  await auth.signOut();
+  location.href="index.html";
+};
+
+/* ===== permissions ===== */
+function hasPerm(u, key){
+  return u?.roles?.superAdmin === true || u?.permissions?.[key] === true;
+}
+
+/* ===== modal refs ===== */
+const overlay = document.getElementById("overlay");
+const mClose = document.getElementById("mClose");
+mClose.onclick = ()=> overlay.style.display="none";
+overlay.addEventListener("click", (e)=>{ if(e.target === overlay) overlay.style.display="none"; });
+
+const mUid = document.getElementById("mUid");
+const mName = document.getElementById("mName");
+const mJob = document.getElementById("mJob");
+const mEmail = document.getElementById("mEmail");
+const mStudentId = document.getElementById("mStudentId");
+const mClassSeat = document.getElementById("mClassSeat");
+const mEnabled = document.getElementById("mEnabled");
+const roleChecks = document.getElementById("roleChecks");
+const permChecks = document.getElementById("permChecks");
+const btnSave = document.getElementById("btnSave");
+const mSaveMsg = document.getElementById("mSaveMsg");
+const btnToggleEnabled = document.getElementById("btnToggleEnabled");
+const mCreatedAt = document.getElementById("mCreatedAt");
+const mLastLoginAt = document.getElementById("mLastLoginAt");
+const mAuthCreate = document.getElementById("mAuthCreate");
+const mAuthLast = document.getElementById("mAuthLast");
+
+const btnGenReset = document.getElementById("btnGenReset");
+const qrBox = document.getElementById("qrBox");
+const qrLinkText = document.getElementById("qrLinkText");
+const qrExp = document.getElementById("qrExp");
+const qrCanvas = document.getElementById("qrCanvas");
+const qrWarn = document.getElementById("qrWarn");
+
+/* ===== state ===== */
+let meUserDoc = null;
+let editingUid = null;
+let editingData = null;
+
+/* catalogs */
+const ROLE_KEYS = [
+  ["student","學生"],
+  ["busLeader","車長"],
+  ["staff","車長幹部"],
+  ["admin","行政"],
+  ["superAdmin","超級管理員"],
+];
+const PERM_KEYS = [
+  ["admin.manageUsers","用戶管理"],
+  ["admin.managePermissions","權限管理"],
+  ["admin.editAnnouncements","公告管理"],
+  ["admin.exportReports","匯出報表"],
+  ["admin.impersonate","模擬身份"],
+
+  ["violation.review","違規審核"],
+  ["violation.void","違規銷除"],
+  ["violation.forward","違規轉送"],
+];
+
+function fmtTs(ts){
+  try{
+    if(!ts) return "—";
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    return d.toLocaleString("zh-TW",{hour12:false});
+  }catch(_){ return "—"; }
+}
+function normBool(v){ return v === true; }
+
+function escapeHtml(s){
+  return String(s ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#39;");
+}
+
+function setModalChecks(container, keys, dataObj){
+  container.innerHTML = "";
+  keys.forEach(([k,label])=>{
+    const id = "chk_"+k.replace(/\./g,"_");
+    const wrap = document.createElement("label");
+    wrap.className = "chk";
+    wrap.innerHTML = `<input type="checkbox" id="${id}"><span>${label}</span>`;
+    container.appendChild(wrap);
+
+    const input = wrap.querySelector("input");
+    input.checked = normBool(dataObj?.[k]);
+  });
+}
+
+function readChecks(container, keys){
+  const out = {};
+  keys.forEach(([k])=>{
+    const id = "chk_"+k.replace(/\./g,"_");
+    const input = container.querySelector("#"+id);
+    out[k] = input ? input.checked : false;
+  });
+  return out;
+}
+
+/* ===== list + filter ===== */
+let allRows = [];
+let lastDoc = null;
+const PAGE_SIZE = 300;
+
+function applyFilters(rows){
+  const text = q.value.trim().toLowerCase();
+  const role = roleFilter.value;
+  const enabledSel = enabledFilter.value;
+
+  return rows.filter(r=>{
+    const d = r.data || {};
+    const hay = [
+      d.name||"", d.title||"", d.studentId||"", d.email||"", r.id||""
+    ].join(" ").toLowerCase();
+
+    if(text && !hay.includes(text)) return false;
+
+    if(role !== "all"){
+      const roles = d.roles || {};
+      if(roles[role] !== true) return false;
+    }
+
+    if(enabledSel === "enabled" && d.enabled !== true) return false;
+    if(enabledSel === "disabled" && d.enabled === true) return false;
+
+    return true;
+  });
+}
+
+function renderTable(rows){
+  countBadge.textContent = `已載入：${allRows.length}｜目前顯示：${rows.length}`;
+
+  if(rows.length === 0){
+    tbody.innerHTML = `<tr><td colspan="5" class="muted">沒有符合的資料</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = "";
+  rows.forEach(r=>{
+    const d = r.data || {};
+    const name = d.name || "—";
+    const title = d.title || "—";
+    const email = d.email || "—";
+    const studentId = d.studentId || "—";
+    const enabled = d.enabled === true;
+
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td><b>${escapeHtml(name)}</b><div class="muted">${escapeHtml(title)}</div></td>
+      <td>${escapeHtml(email)}</td>
+      <td>${escapeHtml(studentId)}</td>
+      <td>${enabled ? "已開通" : "未開通/停用"}</td>
+      <td><button class="miniBtn" data-uid="${r.id}">查看</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  tbody.querySelectorAll("button[data-uid]").forEach(btn=>{
+    btn.onclick = ()=> openUserModal(btn.dataset.uid);
+  });
+}
+
+async function loadUsersPage(){
+  let ref = db.collection("users").orderBy(firebase.firestore.FieldPath.documentId()).limit(PAGE_SIZE);
+  if(lastDoc) ref = ref.startAfter(lastDoc);
+
+  const snap = await ref.get();
+  const newRows = snap.docs.map(doc=>({id:doc.id, data:doc.data()}));
+  allRows = allRows.concat(newRows);
+
+  lastDoc = snap.docs.length ? snap.docs[snap.docs.length-1] : lastDoc;
+  btnMore.style.display = (snap.docs.length === PAGE_SIZE) ? "" : "none";
+
+  renderTable(applyFilters(allRows));
+}
+
+async function loadInitial(){
+  tbody.innerHTML = `<tr><td colspan="5" class="muted">讀取中…</td></tr>`;
+  allRows = [];
+  lastDoc = null;
+  btnMore.style.display = "none";
+  await loadUsersPage();
+}
+
+btnMore.onclick = async ()=>{
+  btnMore.disabled = true;
+  btnMore.textContent = "載入中…";
+  try{
+    await loadUsersPage();
+  }finally{
+    btnMore.disabled = false;
+    btnMore.textContent = "載入更多";
+  }
+};
+
+btnSearch.onclick = ()=> renderTable(applyFilters(allRows));
+q.addEventListener("keydown", (e)=>{ if(e.key==="Enter") btnSearch.click(); });
+roleFilter.onchange = ()=> btnSearch.click();
+enabledFilter.onchange = ()=> btnSearch.click();
+
+/* ===== modal open ===== */
+async function openUserModal(uid){
+  editingUid = uid;
+  mSaveMsg.textContent = "讀取中…";
+
+  const doc = await db.collection("users").doc(uid).get();
+  if(!doc.exists){
+    mSaveMsg.textContent = "找不到此用戶";
+    return;
+  }
+  editingData = doc.data() || {};
+
+  mUid.textContent = "UID：" + uid;
+
+  mName.textContent = editingData.name || "—";
+  mJob.textContent = editingData.title || "—";
+  mEmail.textContent = editingData.email || "—";
+  mStudentId.textContent = editingData.studentId || "—";
+  mClassSeat.textContent = editingData.classSeat || "—";
+  mEnabled.textContent = editingData.enabled === true ? "已開通" : "未開通/停用";
+
+  const rolesObj = editingData.roles || {};
+  const permsObj = editingData.permissions || {};
+  setModalChecks(roleChecks, ROLE_KEYS, rolesObj);
+  setModalChecks(permChecks, PERM_KEYS, permsObj);
+
+  mCreatedAt.textContent = fmtTs(editingData.createdAt);
+  mLastLoginAt.textContent = fmtTs(editingData.lastLoginAt);
+  mAuthCreate.textContent = editingData.authMeta?.creationTime || "—";
+  mAuthLast.textContent = editingData.authMeta?.lastSignInTime || "—";
+
+  qrBox.style.display = "none";
+  qrWarn.textContent = "";
+
+  mSaveMsg.textContent = "可修改身份/權限/停用/重設密碼。";
+  overlay.style.display = "flex";
+}
+
+/* toggle enabled */
+btnToggleEnabled.onclick = async ()=>{
+  if(!editingUid) return;
+  const cur = editingData?.enabled === true;
+  const next = !cur;
+
+  try{
+    await db.collection("users").doc(editingUid).set({
+      enabled: next,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    }, {merge:true});
+
+    editingData.enabled = next;
+    mEnabled.textContent = next ? "已開通" : "未開通/停用";
+    mSaveMsg.textContent = "✅ 已更新狀態";
+
+    const i = allRows.findIndex(x=>x.id===editingUid);
+    if(i>=0){ allRows[i].data.enabled = next; }
+    renderTable(applyFilters(allRows));
+  }catch(e){
+    console.error(e);
+    mSaveMsg.textContent = "❌ 更新失敗（可能 rules 未開權限）";
+  }
+};
+
+/* save roles/perms */
+btnSave.onclick = async ()=>{
+  if(!editingUid) return;
+
+  const roles = readChecks(roleChecks, ROLE_KEYS);
+  const permissions = readChecks(permChecks, PERM_KEYS);
+
+  try{
+    await db.collection("users").doc(editingUid).set({
+      roles,
+      permissions,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    }, {merge:true});
+
+    mSaveMsg.textContent = "✅ 已儲存身份/權限";
+
+    const i = allRows.findIndex(x=>x.id===editingUid);
+    if(i>=0){
+      allRows[i].data.roles = roles;
+      allRows[i].data.permissions = permissions;
+    }
+    renderTable(applyFilters(allRows));
+  }catch(e){
+    console.error(e);
+    mSaveMsg.textContent = "❌ 儲存失敗（可能 rules 未開權限）";
+  }
+};
+
+/* ===== reset token + QR ===== */
+function makeToken(){
+  const bytes = new Uint8Array(32);
+  crypto.getRandomValues(bytes);
+  let s = btoa(String.fromCharCode(...bytes));
+  s = s.replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  return s;
+}
+
+btnGenReset.onclick = async ()=>{
+  if(!editingUid) return;
+
+  const token = makeToken();
+  const expiresInMin = 20;
+  const exp = new Date(Date.now() + expiresInMin * 60 * 1000);
+
+  const docData = {
+    uid: editingUid,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    expiresAt: firebase.firestore.Timestamp.fromDate(exp),
+    used: false,
+    createdByUid: auth.currentUser.uid,
+    purpose: "password_reset",
+  };
+
+  try{
+    await db.collection("passwordResetTokens").doc(token).set(docData);
+
+    const basePath = location.pathname.replace(/\/[^\/]*$/, "");
+    const link = `${location.origin}${basePath}/reset-password.html?t=${encodeURIComponent(token)}`;
+
+    qrBox.style.display = "block";
+    qrLinkText.textContent = link;
+    qrExp.textContent = exp.toLocaleString("zh-TW",{hour12:false});
+
+    const canvas = qrCanvas;
+    canvas.width = 220; canvas.height = 220;
+    await QRCode.toCanvas(canvas, link, { width: 220, margin: 1 });
+
+    qrWarn.textContent = "請在有效期限內使用。若已過期，請重新產生。";
+    mSaveMsg.textContent = "✅ 已產生重設條碼";
+  }catch(e){
+    console.error(e);
+    mSaveMsg.textContent = "❌ 產生失敗（可能 rules 未開 passwordResetTokens 寫入）";
+  }
+};
+
+/* ===== auth gate ===== */
+auth.onAuthStateChanged(async (user)=>{
+  loadOverlay.style.display = "flex";
+  loadOverlay.classList.remove("hide");
+  startProgress();
+
+  try{
+    if(!user){ location.href="index.html"; return; }
+
+    // settings/global
+    try{
+      const settingsDoc = await db.collection("settings").doc("global").get();
+      const sem = String(settingsDoc.get("active_semester_id") || "");
+      semesterHint.textContent = "學期：" + (sem || "未設定");
+    }catch(_){
+      semesterHint.textContent = "學期：未設定";
+    }
+
+    // me doc
+    const meDoc = await db.collection("users").doc(user.uid).get();
+    meUserDoc = meDoc.exists ? meDoc.data() : null;
+
+    if(!meUserDoc || meUserDoc.enabled !== true){
+      await auth.signOut();
+      location.href="index.html";
+      return;
+    }
+
+    // must have manageUsers
+    if(!hasPerm(meUserDoc, "admin.manageUsers")){
+      location.href="dashboard.html";
+      return;
+    }
+
+    // show nav
+    if(navAnn) navAnn.style.display = hasPerm(meUserDoc, "admin.editAnnouncements") ? "" : "none";
+    if(navPerms) navPerms.style.display = hasPerm(meUserDoc, "admin.managePermissions") ? "" : "none";
+    if(navImp) navImp.style.display = hasPerm(meUserDoc, "admin.impersonate") ? "" : "none";
+
+    meLine1.textContent = `${meUserDoc.title || "—"}｜${meUserDoc.name || (user.email||"")}`;
+    meLine2.textContent = user.email || "";
+
+    app.style.display = "grid";
+    await loadInitial();
+
+    await finishEnter();
+  }catch(e){
+    console.error("[admin-users fatal]", e);
+    app.style.display = "grid";
+    document.getElementById("hint").innerHTML =
+      `❌ 讀取失敗：<b>可能是 Firestore Rules 未允許管理員讀取 users 集合</b>。<br>` +
+      `請把我上面給你的 rules 貼到 Firestore Rules 後再試。`;
+    await finishEnter();
+  }
+});
+</script>
+</body>
+</html>

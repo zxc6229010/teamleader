@@ -15,23 +15,11 @@
   --muted:#6b7280;
   --border:#eef2f7;
 }
-
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans TC",sans-serif;
-}
-
-body{
-  background:linear-gradient(180deg,var(--bg1),var(--bg2));
-  min-height:100vh;
-  color:var(--text);
-}
-
+*{ box-sizing:border-box; margin:0; padding:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans TC",sans-serif; }
+body{ background:linear-gradient(180deg,var(--bg1),var(--bg2)); min-height:100vh; color:var(--text); }
 a{ color:inherit; text-decoration:none; }
 
-/* Layout */
+/* ===== Layout ===== */
 .app{
   width:min(1200px, calc(100% - 32px));
   margin:22px auto 26px;
@@ -40,16 +28,11 @@ a{ color:inherit; text-decoration:none; }
   gap:18px;
   align-items:stretch;
 }
-
 @media (max-width: 900px){
-  .app{
-    grid-template-columns: 1fr;
-    width:calc(100% - 20px);
-    margin:14px auto 18px;
-  }
+  .app{ grid-template-columns: 1fr; width:calc(100% - 20px); margin:14px auto 18px; }
 }
 
-/* Sidebar */
+/* ===== Sidebar ===== */
 .sidebar{
   background:white;
   border-radius:18px;
@@ -60,48 +43,19 @@ a{ color:inherit; text-decoration:none; }
   height: calc(100vh - 36px);
   overflow:auto;
 }
-
 .brand{
-  display:flex;
-  gap:12px;
-  align-items:center;
+  display:flex; gap:12px; align-items:center;
   padding:10px 10px 14px;
   border-bottom:1px solid var(--border);
   margin-bottom:12px;
 }
+.brand img{ width:42px; height:42px; border-radius:12px; background:#f3f4f6; }
+.brand h1{ font-size:16px; font-weight:800; color:#1f2937; line-height:1.2; }
+.brand p{ font-size:11px; color:var(--muted); letter-spacing:2px; margin-top:3px; }
 
-.brand img{
-  width:42px;
-  height:42px;
-  border-radius:12px;
-  background:#f3f4f6;
-}
-
-.brand h1{
-  font-size:16px;
-  font-weight:800;
-  color:#1f2937;
-  line-height:1.2;
-}
-
-.brand p{
-  font-size:11px;
-  color:var(--muted);
-  letter-spacing:2px;
-  margin-top:3px;
-}
-
-.nav{
-  margin-top:10px;
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-}
-
+.nav{ margin-top:10px; display:flex; flex-direction:column; gap:6px; }
 .navbtn{
-  display:flex;
-  align-items:center;
-  gap:10px;
+  display:flex; align-items:center; gap:10px;
   padding:12px 12px;
   border-radius:14px;
   cursor:pointer;
@@ -109,80 +63,31 @@ a{ color:inherit; text-decoration:none; }
   transition:all .15s ease;
   border:1px solid transparent;
 }
-
-.navbtn:hover{
-  background:#f9fafb;
-  border-color:var(--border);
-}
-
-.navbtn.active{
-  background:var(--primary);
-  color:white;
-}
-
+.navbtn:hover{ background:#f9fafb; border-color:var(--border); }
+.navbtn.active{ background:var(--primary); color:white; }
 .icon{
-  width:34px;
-  height:34px;
-  border-radius:12px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  width:34px; height:34px; border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
   background:rgba(0,136,255,0.12);
   color:var(--primary);
   font-weight:800;
 }
-
-.icon svg{
-  width:18px;
-  height:18px;
-  stroke:currentColor;
-  fill:none;
-  stroke-width:1.9;
-  stroke-linecap:round;
-  stroke-linejoin:round;
-}
-
-.navbtn.active .icon{
-  background:rgba(255,255,255,.22);
-  color:white;
-}
-
-.navlabel{
-  display:flex;
-  flex-direction:column;
-  gap:2px;
-}
-
+.navbtn.active .icon{ background:rgba(255,255,255,.22); color:white; }
+.navlabel{ display:flex; flex-direction:column; gap:2px; }
 .navlabel b{ font-size:14px; }
 .navlabel span{ font-size:12px; opacity:.9; }
 
-.sidefoot{
-  margin-top:16px;
-  padding-top:14px;
-  border-top:1px solid var(--border);
-}
-
-.small{
-  font-size:12px;
-  color:var(--muted);
-  line-height:1.6;
-}
-
+.sidefoot{ margin-top:16px; padding-top:14px; border-top:1px solid var(--border); }
+.small{ font-size:12px; color:var(--muted); line-height:1.6; }
 .logout{
-  margin-top:10px;
-  width:100%;
-  padding:12px;
-  border-radius:14px;
-  border:none;
-  background:var(--primary);
-  color:white;
-  font-weight:800;
-  cursor:pointer;
-  transition:all .2s ease;
+  margin-top:10px; width:100%;
+  padding:12px; border-radius:14px; border:none;
+  background:var(--primary); color:white; font-weight:800;
+  cursor:pointer; transition:all .2s ease;
 }
 .logout:hover{ background:var(--primary-dark); }
 
-/* Main */
+/* ===== Main ===== */
 .main{
   background:white;
   border-radius:18px;
@@ -190,27 +95,17 @@ a{ color:inherit; text-decoration:none; }
   padding:18px 18px 22px;
   overflow:hidden;
 }
-
 .topbar{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:12px;
+  display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
   border-bottom:1px solid var(--border);
   padding-bottom:14px;
-  margin-bottom:16px;
+  margin-bottom:12px;
 }
-
-.leftTop{
-  display:flex;
-  align-items:flex-start;
-  gap:10px;
-}
+.leftTop{ display:flex; align-items:flex-start; gap:10px; }
 
 .hamburger{
   display:none;
-  width:44px;
-  height:44px;
+  width:44px; height:44px;
   border-radius:14px;
   border:1px solid var(--border);
   background:#f9fafb;
@@ -220,82 +115,32 @@ a{ color:inherit; text-decoration:none; }
   transition:.15s ease;
 }
 .hamburger:hover{ border-color:#dbe5f5; background:#fff; }
+.hamburger svg{ width:22px; height:22px; }
 
-.hamburger svg{
-  width:22px;
-  height:22px;
-}
-
-.pageTitle{
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-}
-
-.pageTitle h2{
-  font-size:18px;
-  color:var(--text);
-}
-
-.pageTitle p{
-  font-size:12px;
-  color:var(--muted);
-  letter-spacing:1px;
-}
+.pageTitle{ display:flex; flex-direction:column; gap:4px; }
+.pageTitle h2{ font-size:18px; color:var(--text); }
+.pageTitle p{ font-size:12px; color:var(--muted); letter-spacing:1px; }
 
 .userbox{
-  display:flex;
-  align-items:center;
-  gap:10px;
+  display:flex; align-items:center; gap:10px;
   background:#f9fafb;
   border:1px solid var(--border);
   padding:10px 12px;
   border-radius:14px;
   min-width: 220px;
 }
-
-.userdot{
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  background:#16a34a;
-}
-
-.userinfo{
-  display:flex;
-  flex-direction:column;
-  gap:2px;
-}
-
-.userinfo b{
-  font-size:13px;
-  color:var(--text);
-}
-.userinfo span{
-  font-size:12px;
-  color:var(--muted);
-}
+.userdot{ width:10px; height:10px; border-radius:50%; background:#16a34a; }
+.userinfo{ display:flex; flex-direction:column; gap:2px; }
+.userinfo b{ font-size:13px; color:var(--text); }
+.userinfo span{ font-size:12px; color:var(--muted); }
 
 /* Sections */
-.section{
-  display:none;
-  animation: fadeUp .22s ease;
-}
+.section{ display:none; animation: fadeUp .22s ease; }
 .section.active{ display:block; }
+@keyframes fadeUp{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:translateY(0); } }
 
-@keyframes fadeUp{
-  from{ opacity:0; transform:translateY(8px); }
-  to{ opacity:1; transform:translateY(0); }
-}
-
-.grid{
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap:14px;
-}
-@media (max-width: 900px){
-  .grid{ grid-template-columns: 1fr; }
-}
+.grid{ display:grid; grid-template-columns: 1fr 1fr; gap:14px; }
+@media (max-width: 900px){ .grid{ grid-template-columns: 1fr; } }
 
 .card{
   background:#fff;
@@ -303,66 +148,115 @@ a{ color:inherit; text-decoration:none; }
   border-radius:18px;
   padding:16px;
 }
-.card h3{
-  font-size:15px;
-  margin-bottom:8px;
-  color:var(--text);
-}
-.card p{
-  font-size:12px;
-  color:var(--muted);
-  line-height:1.7;
-}
+.card h3{ font-size:15px; margin-bottom:8px; color:var(--text); }
+.card p{ font-size:12px; color:var(--muted); line-height:1.7; }
+.notice{ margin-top:10px; font-size:12px; color:var(--muted); line-height:1.6; }
 
-.notice{
-  margin-top:10px;
-  font-size:12px;
-  color:var(--muted);
-  line-height:1.6;
-}
-
-/* Loading overlay */
+/* ===== Loading overlay (Skeleton + Top progress, no hint text) ===== */
 .overlay{
   position:fixed;
   inset:0;
-  background:rgba(238,242,247,.75);
-  backdrop-filter: blur(6px);
+  z-index:9999;
   display:flex;
   align-items:center;
   justify-content:center;
-  z-index:999;
+  background:rgba(238,242,247,.72);
+  backdrop-filter: blur(10px);
+  transition: opacity .25s ease, visibility .25s ease;
 }
-.loader{
-  width:min(420px, calc(100% - 40px));
-  background:white;
-  border-radius:18px;
-  box-shadow:0 20px 40px rgba(0,0,0,0.12);
-  padding:18px 18px 16px;
-  border:1px solid var(--border);
+.overlay.hide{
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
 }
-.loader h3{ font-size:16px; color:var(--text); }
-.loader p{
-  margin-top:6px;
-  font-size:12px;
-  color:var(--muted);
-  line-height:1.6;
-}
-.barWrap{
-  margin-top:12px;
-  height:10px;
-  background:var(--border);
-  border-radius:999px;
+.loadPanel{
+  width:min(720px, calc(100% - 28px));
+  border-radius:22px;
+  background:rgba(255,255,255,.86);
+  border:1px solid rgba(229,234,242,.9);
+  box-shadow:0 28px 70px rgba(0,0,0,.18);
   overflow:hidden;
+  transform: translateY(6px);
+  animation: panelIn .28s ease forwards;
 }
-.bar{
-  height:10px;
-  width:0%;
-  background:var(--primary);
-  border-radius:999px;
-  transition:width .22s ease;
-}
+@keyframes panelIn{ to{ transform: translateY(0); } }
 
-/* Mobile drawer */
+.loadTopBar{ height:4px; background:rgba(238,242,247,.9); overflow:hidden; }
+.loadBar{
+  height:4px;
+  width:10%;
+  background:linear-gradient(90deg, var(--primary), #47b1ff, var(--primary));
+  background-size:200% 100%;
+  animation: barGlow 1.2s linear infinite;
+  border-radius:0 999px 999px 0;
+  transform-origin:left;
+  transition: width .18s ease;
+}
+@keyframes barGlow{
+  0%{ background-position: 0% 50%; }
+  100%{ background-position: 200% 50%; }
+}
+.loadHeader{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:16px 18px 12px;
+}
+.loadMark img{
+  width:44px;
+  height:44px;
+  border-radius:14px;
+  background:#f3f4f6;
+  border:1px solid rgba(229,234,242,.9);
+}
+.loadSpin{
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  border:2px solid rgba(0,136,255,.18);
+  border-top-color: rgba(0,136,255,.9);
+  animation: spin .8s linear infinite;
+}
+@keyframes spin{ to{ transform: rotate(360deg); } }
+
+.loadSkeleton{ padding:4px 18px 18px; }
+.skLine, .skCard{
+  position:relative;
+  overflow:hidden;
+  background:rgba(238,242,247,.95);
+  border:1px solid rgba(229,234,242,.95);
+}
+.skLine{ height:12px; border-radius:999px; margin:10px 0; }
+.skGrid{
+  margin-top:14px;
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:12px;
+}
+@media (max-width: 700px){ .skGrid{ grid-template-columns: 1fr; } }
+.skCard{ border-radius:18px; padding:14px; min-height:132px; }
+
+.skLine::after, .skCard::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  transform: translateX(-60%);
+  background: linear-gradient(90deg,
+    rgba(238,242,247,0) 0%,
+    rgba(255,255,255,.85) 45%,
+    rgba(238,242,247,0) 100%
+  );
+  animation: shimmer 1.1s ease-in-out infinite;
+}
+@keyframes shimmer{
+  0%{ transform: translateX(-65%); }
+  100%{ transform: translateX(65%); }
+}
+.w35{ width:35%; } .w40{ width:40%; } .w55{ width:55%; } .w58{ width:58%; }
+.w60{ width:60%; } .w68{ width:68%; } .w70{ width:70%; } .w72{ width:72%; }
+.w85{ width:85%; } .w90{ width:90%; } .w92{ width:92%; }
+
+/* ===== Mobile drawer behavior ===== */
 .drawerBackdrop{
   display:none;
   position:fixed;
@@ -370,14 +264,11 @@ a{ color:inherit; text-decoration:none; }
   background:rgba(17,24,39,.38);
   z-index:998;
 }
-
 @media (max-width: 900px){
   .hamburger{ display:flex; }
-
   .sidebar{
     position:fixed;
-    top:0;
-    left:0;
+    top:0; left:0;
     height:100vh;
     width: 86vw;
     max-width: 320px;
@@ -390,21 +281,147 @@ a{ color:inherit; text-decoration:none; }
   .sidebar.open{ transform:translateX(0); }
   .drawerBackdrop.show{ display:block; }
 }
+
+/* helpers */
+.row{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:10px; padding:10px 0;
+  border-top:1px dashed var(--border);
+}
+.row:first-of-type{ border-top:none; padding-top:0; }
+.kpi{ display:flex; flex-direction:column; gap:2px; }
+.kpi b{ font-size:14px; }
+.kpi span{ font-size:12px; color:var(--muted); }
+.pill{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:6px 10px; border:1px solid var(--border);
+  border-radius:999px; background:#f9fafb;
+  font-size:12px; color:var(--muted);
+}
+.miniBtn{
+  padding:7px 10px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:#fff;
+  cursor:pointer;
+  font-size:12px;
+  color:var(--primary);
+  font-weight:800;
+}
+.miniBtn:hover{ border-color:#dbe5f5; background:#f9fafb; }
+.formRow{ display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; align-items:flex-end; }
+.field{ display:flex; flex-direction:column; gap:6px; }
+.field label{ font-size:12px; color:var(--muted); }
+.field input, .field select{
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid var(--border);
+  background:#f9fafb;
+  font-size:13px;
+}
+.field input:focus, .field select:focus{
+  outline:none;
+  border-color:#cfe3ff;
+  background:#fff;
+}
+.primaryBtn{
+  padding:10px 14px;
+  border-radius:14px;
+  border:none;
+  background:var(--primary);
+  color:#fff;
+  font-weight:900;
+  cursor:pointer;
+}
+.primaryBtn:hover{ background:var(--primary-dark); }
+.mutedBox{
+  margin-top:12px;
+  padding:12px 14px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:#f9fafb;
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.7;
+}
+
+/* ===== Announcement Marquee ===== */
+.announceWrap{
+  display:none;
+  margin:0 0 12px;
+  border:1px solid var(--border);
+  background:#f9fafb;
+  border-radius:14px;
+  overflow:hidden;
+}
+.announceInner{ display:flex; align-items:center; gap:10px; padding:10px 12px; }
+.announceIcon{
+  width:28px; height:28px;
+  border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(0,136,255,0.12);
+  color:var(--primary);
+  font-weight:900;
+}
+.announceMarquee{ overflow:hidden; white-space:nowrap; flex:1; }
+.announceText{
+  display:inline-block;
+  padding-left:100%;
+  animation: marquee 18s linear infinite;
+  font-weight:600;
+}
+@keyframes marquee{
+  0%{ transform:translateX(0); }
+  100%{ transform:translateX(-100%); }
+}
+.announceRight{ display:flex; gap:8px; align-items:center; }
+.announceBadge{
+  font-size:12px;
+  color:var(--muted);
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:#fff;
+}
 </style>
 </head>
 
 <body>
 
 <!-- Loading Overlay -->
-<div class="overlay" id="overlay">
-  <div class="loader">
-    <h3 id="loadTitle">載入中…</h3>
-    <p id="loadText">正在初始化系統</p>
-    <div class="barWrap"><div class="bar" id="loadBar"></div></div>
+<div class="overlay" id="overlay" aria-hidden="false">
+  <div class="loadPanel">
+    <div class="loadTopBar">
+      <div class="loadBar" id="loadBar"></div>
+    </div>
+    <div class="loadHeader">
+      <div class="loadMark">
+        <img src="./schoolbadge.gif" alt="logo">
+      </div>
+      <div class="loadSpin" aria-hidden="true"></div>
+    </div>
+    <div class="loadSkeleton">
+      <div class="skLine w60"></div>
+      <div class="skLine w85"></div>
+      <div class="skLine w72"></div>
+      <div class="skGrid">
+        <div class="skCard">
+          <div class="skLine w40"></div>
+          <div class="skLine w90"></div>
+          <div class="skLine w70"></div>
+          <div class="skLine w55"></div>
+        </div>
+        <div class="skCard">
+          <div class="skLine w35"></div>
+          <div class="skLine w92"></div>
+          <div class="skLine w68"></div>
+          <div class="skLine w58"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- Mobile drawer backdrop -->
 <div class="drawerBackdrop" id="drawerBackdrop"></div>
 
 <div class="app" id="app" style="display:none;">
@@ -419,102 +436,79 @@ a{ color:inherit; text-decoration:none; }
     </div>
 
     <nav class="nav" id="nav">
-  <!-- 1 􀎞：總覽 -->
-  <div class="navbtn active" data-target="home">
-    <div class="icon">
-      <!-- house -->
-      <svg viewBox="0 0 24 24">
-        <path d="M3 10.5L12 3l9 7.5"></path>
-        <path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"></path>
-      </svg>
-    </div>
-    <div class="navlabel">
-      <b>總覽</b>
-      <span>本學期狀態與提醒</span>
-    </div>
-  </div>
+      <div class="navbtn active" data-target="home">
+        <div class="icon">🏠</div>
+        <div class="navlabel">
+          <b>總覽</b>
+          <span>本學期狀態與提醒</span>
+        </div>
+      </div>
 
-  <!-- 2 􀈧：匯入 -->
-  <div class="navbtn" data-target="import">
-    <div class="icon">
-      <!-- tray and arrow up -->
-      <svg viewBox="0 0 24 24">
-        <path d="M12 3v10"></path>
-        <path d="M8 7l4-4 4 4"></path>
-        <path d="M4 14h4l2 3h4l2-3h4"></path>
-        <path d="M4 14v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"></path>
-      </svg>
-    </div>
-    <div class="navlabel">
-      <b>匯入中心</b>
-      <span>學生/車表/名單</span>
-    </div>
-  </div>
+      <div class="navbtn" data-target="import">
+        <div class="icon">⬆️</div>
+        <div class="navlabel">
+          <b>匯入中心</b>
+          <span>學生/車表/名單</span>
+        </div>
+      </div>
 
-  <!-- 3 􂹚：違規登記 -->
-  <div class="navbtn" data-target="violation">
-    <div class="icon">
-      <!-- pencil -->
-      <svg viewBox="0 0 24 24">
-        <path d="M12 20h9"></path>
-        <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4 11.5-11.5z"></path>
-      </svg>
-    </div>
-    <div class="navlabel">
-      <b>違規登記</b>
-      <span>登記與彙整</span>
-    </div>
-  </div>
+      <div class="navbtn" data-target="violation">
+        <div class="icon">📝</div>
+        <div class="navlabel">
+          <b>違規登記</b>
+          <span>登記與彙整</span>
+        </div>
+      </div>
 
-  <!-- 4 􀊫：查詢 -->
-  <div class="navbtn" data-target="query">
-    <div class="icon">
-      <!-- magnifying glass -->
-      <svg viewBox="0 0 24 24">
-        <circle cx="11" cy="11" r="7"></circle>
-        <path d="M21 21l-4.3-4.3"></path>
-      </svg>
-    </div>
-    <div class="navlabel">
-      <b>查詢</b>
-      <span>學生/車長資料</span>
-    </div>
-  </div>
+      <div class="navbtn" data-target="query">
+        <div class="icon">🔎</div>
+        <div class="navlabel">
+          <b>查詢</b>
+          <span>學生/車長資料</span>
+        </div>
+      </div>
 
-  <!-- 5 􂷼：操作紀錄 -->
-  <div class="navbtn" data-target="audit">
-    <div class="icon">
-      <!-- list/clock style -->
-      <svg viewBox="0 0 24 24">
-        <path d="M8 6h13"></path>
-        <path d="M8 12h13"></path>
-        <path d="M8 18h13"></path>
-        <path d="M3.5 6h.01"></path>
-        <path d="M3.5 12h.01"></path>
-        <path d="M3.5 18h.01"></path>
-      </svg>
-    </div>
-    <div class="navlabel">
-      <b>操作紀錄</b>
-      <span>依時間序搜尋</span>
-    </div>
-  </div>
+      <div class="navbtn" data-target="audit">
+        <div class="icon">🧾</div>
+        <div class="navlabel">
+          <b>操作紀錄</b>
+          <span>依時間序搜尋</span>
+        </div>
+      </div>
 
-  <!-- 6 􀣺：系統設定 -->
-  <div class="navbtn" data-target="settings">
-    <div class="icon">
-      <!-- gear -->
-      <svg viewBox="0 0 24 24">
-        <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"></path>
-        <path d="M19.4 15a7.7 7.7 0 0 0 .1-1l2-1.2-2-3.5-2.3.6a7.5 7.5 0 0 0-1.7-1L15 4h-6l-.5 2.9a7.5 7.5 0 0 0-1.7 1L4.5 7.3l-2 3.5 2 1.2a7.7 7.7 0 0 0 0 2l-2 1.2 2 3.5 2.3-.6a7.5 7.5 0 0 0 1.7 1L9 20h6l.5-2.9a7.5 7.5 0 0 0 1.7-1l2.3.6 2-3.5-2.1-1.2z"></path>
-      </svg>
-    </div>
-    <div class="navlabel">
-      <b>系統設定</b>
-      <span>學期/權限/封存</span>
-    </div>
-  </div>
-</nav>
+      <div class="navbtn" data-target="settings">
+        <div class="icon">⚙️</div>
+        <div class="navlabel">
+          <b>系統設定</b>
+          <span>學期/權限/封存</span>
+        </div>
+      </div>
+
+      <!-- 後台頁（獨立頁面） -->
+      <div class="navbtn" id="navUsers" data-href="admin-users.html" style="display:none;">
+        <div class="icon">👥</div>
+        <div class="navlabel">
+          <b>用戶管理</b>
+          <span>行政/幹部/車長/學生</span>
+        </div>
+      </div>
+
+      <div class="navbtn" id="navPerms" data-href="admin-permissions.html" style="display:none;">
+        <div class="icon">🔐</div>
+        <div class="navlabel">
+          <b>權限管理</b>
+          <span>派發/控管功能權限</span>
+        </div>
+      </div>
+
+      <div class="navbtn" id="navAnn" data-href="admin-announcements.html" style="display:none;">
+        <div class="icon">📢</div>
+        <div class="navlabel">
+          <b>公告管理</b>
+          <span>跑馬燈/樣式/顯示頁面</span>
+        </div>
+      </div>
+    </nav>
 
     <div class="sidefoot">
       <div class="small" id="semesterHint">學期：讀取中…</div>
@@ -551,41 +545,143 @@ a{ color:inherit; text-decoration:none; }
       </div>
     </div>
 
+    <!-- 公告跑馬燈 -->
+    <div class="announceWrap" id="announceWrap">
+      <div class="announceInner">
+        <div class="announceIcon">!</div>
+        <div class="announceMarquee">
+          <div class="announceText" id="announceText">—</div>
+        </div>
+        <div class="announceRight">
+          <span class="announceBadge">公告</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== HOME ====== -->
     <section class="section active" id="sec-home">
       <div class="grid">
         <div class="card">
           <h3>本學期資料狀態</h3>
-          <p id="homeStatus">正在讀取…</p>
+          <div class="row">
+            <div class="kpi">
+              <b id="stSemester">目前學期：—</b>
+              <span id="stTime">系統時間：—</span>
+            </div>
+            <span class="pill" id="stAuth">狀態：讀取中</span>
+          </div>
+
+          <div class="row">
+            <div class="kpi">
+              <b>車表匯入狀況</b>
+              <span>上學 / 週一～四小放學 / 週五小放學 / 大放學</span>
+            </div>
+            <button class="miniBtn" id="btnGoImport">查看</button>
+          </div>
+
+          <div class="notice" id="homeStatus">—</div>
           <div class="notice" id="homeNotice"></div>
         </div>
+
         <div class="card">
           <h3>快速提醒</h3>
-          <p>後續會把「匯入版本時間」、「名單缺漏警告」、「停駛提醒」放在這裡。</p>
+
+          <div class="row">
+            <div class="kpi">
+              <b id="rtMode">今日模式：—</b>
+              <span id="rtRoutes">第一梯次：—｜第二梯次：—｜接近滿載：—</span>
+            </div>
+            <button class="miniBtn" id="btnGoRoutes">查看</button>
+          </div>
+
+          <div class="row">
+            <div class="kpi">
+              <b id="rtVToday">今日違規：—</b>
+              <span id="rtVWeek">本週違規：—｜待審：—</span>
+            </div>
+            <button class="miniBtn" id="btnGoViolations">查看</button>
+          </div>
+
+          <div class="mutedBox" id="rtHint">右側「查看」會直接切換到對應功能並自動套用篩選。</div>
         </div>
+      </div>
+
+      <div class="card" style="margin-top:14px;">
+        <h3>通知中心</h3>
+        <div class="row">
+          <div class="kpi">
+            <b id="nfAdmin">行政未讀通知：—</b>
+            <span id="nfHint">（行政處理/回覆/轉送都會在這裡提示）</span>
+          </div>
+          <button class="miniBtn" id="btnGoNotify">查看</button>
+        </div>
+        <div class="notice" id="nfNote">—</div>
       </div>
     </section>
 
+    <!-- ====== IMPORT ====== -->
     <section class="section" id="sec-import">
       <div class="card">
         <h3>匯入中心</h3>
-        <p>下一步會先做「匯入學生名單」與「匯入車表」。</p>
+        <p>下一步會做「匯入學生名單」與「匯入車表」。目前先把匯入狀態顯示出來。</p>
+        <div class="mutedBox" id="importStatus">車表匯入狀況（讀取中…）</div>
       </div>
     </section>
 
+    <!-- ====== VIOLATION ====== -->
     <section class="section" id="sec-violation">
       <div class="card">
         <h3>違規登記</h3>
-        <p>下一步會做：單一輸入欄位（學號/班座/模糊查）＋違規事件建立＋列印通知單流程。</p>
+        <p>先把「查詢期間/篩選/搜尋入口」做出來，資料後續再接。</p>
+
+        <div class="formRow">
+          <div class="field">
+            <label>篩選</label>
+            <select id="vFilter">
+              <option value="all">全部</option>
+              <option value="today">今日違規</option>
+              <option value="week">本週違規</option>
+              <option value="pending">待審違規</option>
+              <option value="custom">自訂期間</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>起日</label>
+            <input id="vFrom" type="date" />
+          </div>
+
+          <div class="field">
+            <label>迄日</label>
+            <input id="vTo" type="date" />
+          </div>
+
+          <div class="field" style="min-width:240px;flex:1;">
+            <label>搜尋（學號 / 班座 / 姓名 / 關鍵字）</label>
+            <input id="vSearch" type="text" placeholder="輸入後按搜尋" />
+          </div>
+
+          <button class="primaryBtn" id="btnVSearch">搜尋</button>
+        </div>
+
+        <div class="mutedBox" id="vApplied">目前套用篩選：—（尚未查詢）</div>
+
+        <div class="mutedBox" id="vList">
+          這裡將顯示違規清單（下一步接 Firestore：semesters/{semesterId}/violations）。<br>
+          功能規劃：審核 / 銷除（必填原因）/ 轉送行政 / 超級管理員可控管權限 / 所有資料不可刪除（只有超管可 delete）。
+        </div>
       </div>
     </section>
 
+    <!-- ====== QUERY ====== -->
     <section class="section" id="sec-query">
       <div class="card">
         <h3>查詢</h3>
-        <p>依身份顯示不同欄位（學生只能看自己；幹部/行政可查全部）。</p>
+        <p>之後依身份顯示不同欄位（學生只能看自己；幹部/行政可查全部）。</p>
       </div>
     </section>
 
+    <!-- ====== AUDIT ====== -->
     <section class="section" id="sec-audit">
       <div class="card">
         <h3>操作紀錄</h3>
@@ -593,10 +689,12 @@ a{ color:inherit; text-decoration:none; }
       </div>
     </section>
 
+    <!-- ====== SETTINGS ====== -->
     <section class="section" id="sec-settings">
       <div class="card">
         <h3>系統設定</h3>
-        <p>超級管理員發放權限、學期封存/切換、封存資料區查詢。</p>
+        <p>學期封存/切換、封存資料區查詢（後續再做）。</p>
+        <div class="mutedBox">※「用戶管理 / 權限管理 / 公告管理」為獨立頁面，必須由超級管理員派發權限才會出現在左側菜單。</div>
       </div>
     </section>
 
@@ -608,58 +706,113 @@ a{ color:inherit; text-decoration:none; }
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 
 <script>
-/* Firebase */
+/* ===== Firebase init ===== */
 const firebaseConfig = {
   apiKey: "AIzaSyAXgHiQ-Kh6cv4kkOFuHVCUOwD-C1HoUQI",
   authDomain: "teamleader-system.firebaseapp.com",
   projectId: "teamleader-system",
 };
-firebase.initializeApp(firebaseConfig);
-
+if (!firebase.apps || !firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-/* UI refs */
+/* ===== UI refs ===== */
 const overlay = document.getElementById("overlay");
-const loadTitle = document.getElementById("loadTitle");
-const loadText  = document.getElementById("loadText");
-const loadBar   = document.getElementById("loadBar");
-const app       = document.getElementById("app");
+const loadBar = document.getElementById("loadBar");
+const app = document.getElementById("app");
 
 const semesterHint = document.getElementById("semesterHint");
 const userLine1 = document.getElementById("userLine1");
 const userLine2 = document.getElementById("userLine2");
+
 const homeStatus = document.getElementById("homeStatus");
 const homeNotice = document.getElementById("homeNotice");
 
-/* drawer */
+const stSemester = document.getElementById("stSemester");
+const stTime = document.getElementById("stTime");
+const stAuth = document.getElementById("stAuth");
+
+const importStatus = document.getElementById("importStatus");
+
+const rtMode = document.getElementById("rtMode");
+const rtRoutes = document.getElementById("rtRoutes");
+const rtVToday = document.getElementById("rtVToday");
+const rtVWeek = document.getElementById("rtVWeek");
+
+const nfAdmin = document.getElementById("nfAdmin");
+const nfNote = document.getElementById("nfNote");
+const btnGoNotify = document.getElementById("btnGoNotify");
+
+const announceWrap = document.getElementById("announceWrap");
+const announceText = document.getElementById("announceText");
+
+const vFilter = document.getElementById("vFilter");
+const vFrom = document.getElementById("vFrom");
+const vTo = document.getElementById("vTo");
+const vSearch = document.getElementById("vSearch");
+const btnVSearch = document.getElementById("btnVSearch");
+const vApplied = document.getElementById("vApplied");
+
 const sidebar = document.getElementById("sidebar");
 const backdrop = document.getElementById("drawerBackdrop");
 const btnHamburger = document.getElementById("btnHamburger");
 
-function setOverlay(t1, t2, p){
-  loadTitle.textContent = t1;
-  loadText.textContent  = t2;
-  loadBar.style.width   = (p || 0) + "%";
+const navAnn = document.getElementById("navAnn");
+const navUsers = document.getElementById("navUsers");
+const navPerms = document.getElementById("navPerms");
+
+/* ===== helpers ===== */
+function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
+function withTimeout(promise, ms, label){
+  return new Promise((resolve, reject)=>{
+    const t = setTimeout(()=>reject(new Error(`timeout:${label||"task"}:${ms}ms`)), ms);
+    Promise.resolve(promise).then(
+      (v)=>{ clearTimeout(t); resolve(v); },
+      (e)=>{ clearTimeout(t); reject(e); }
+    );
+  });
 }
-function showApp(){
+
+/* ===== Loading progress ===== */
+let prog = 0;
+let progTimer = null;
+
+function startProgress(){
+  stopProgress();
+  prog = 8;
+  loadBar.style.width = prog + "%";
+  progTimer = setInterval(()=>{
+    if(prog < 92){
+      prog += Math.random()*3.2;
+      if(prog > 92) prog = 92;
+      loadBar.style.width = Math.floor(prog) + "%";
+    }
+  }, 180);
+}
+function stopProgress(){
+  if(progTimer){ clearInterval(progTimer); progTimer = null; }
+}
+async function finishAndEnter(){
+  stopProgress();
+  loadBar.style.width = "100%";
+  await sleep(160);
+
+  // 先顯示 app，避免白閃
   app.style.display = "grid";
+
+  // overlay 淡出
+  overlay.classList.add("hide");
+  await sleep(260);
   overlay.style.display = "none";
 }
 
-/* Drawer open/close */
-function openDrawer(){
-  sidebar.classList.add("open");
-  backdrop.classList.add("show");
-}
-function closeDrawer(){
-  sidebar.classList.remove("open");
-  backdrop.classList.remove("show");
-}
+/* ===== Drawer ===== */
+function openDrawer(){ sidebar.classList.add("open"); backdrop.classList.add("show"); }
+function closeDrawer(){ sidebar.classList.remove("open"); backdrop.classList.remove("show"); }
 btnHamburger.addEventListener("click", openDrawer);
 backdrop.addEventListener("click", closeDrawer);
 
-/* Navigation */
+/* ===== navigation ===== */
 function activate(target){
   document.querySelectorAll(".navbtn").forEach(b=>{
     b.classList.toggle("active", b.dataset.target === target);
@@ -679,100 +832,324 @@ function activate(target){
   document.getElementById("pageTitle").textContent = map[target][0];
   document.getElementById("pageSub").textContent   = map[target][1];
 
+  updateAnnouncementVisibility(target);
   closeDrawer();
 }
 
 document.getElementById("nav").addEventListener("click", (e)=>{
   const btn = e.target.closest(".navbtn");
   if(!btn) return;
-  activate(btn.dataset.target);
+
+  // 外部後台頁
+  if(btn.dataset.href){
+    window.location.href = btn.dataset.href;
+    return;
+  }
+
+  // dashboard 內部頁
+  if(btn.dataset.target){
+    activate(btn.dataset.target);
+  }
 });
 
-/* Logout */
+/* logout */
 document.getElementById("btnLogout").onclick = async ()=>{
   await auth.signOut();
   window.location.href = "index.html";
 };
 
-/* ===== Scopes permission ===== */
-function hasScope(userData, scope){
-  const arr = Array.isArray(userData?.scopes) ? userData.scopes : [];
-  return arr.includes(scope);
+/* ===== permissions ===== */
+function hasPerm(u, key){
+  return u?.roles?.superAdmin === true || u?.permissions?.[key] === true;
 }
 
-function applyMenuByScopes(userData){
-  // 每個 target 對應所需 scope
-  const map = {
-    home: "dashboard.view",
-    import: "import.view",
-    violation: "violation.view",
-    query: "query.view",
-    audit: "audit.view",
-    settings: "settings.view",
-  };
+/* ===== announcement ===== */
+let ANN = null;
+let ANN_PAGE = "home";
 
-  document.querySelectorAll(".navbtn").forEach(btn=>{
-    const t = btn.dataset.target;
-    const need = map[t] || "dashboard.view";
-    btn.style.display = hasScope(userData, need) ? "" : "none";
-  });
+function applyAnnouncementStyle(style){
+  const st = style || {};
+  announceText.style.color = st.color || "#111827";
+  announceText.style.fontWeight = st.bold ? "900" : "600";
+  announceText.style.fontStyle = st.italic ? "italic" : "normal";
+  announceText.style.textDecoration = st.underline ? "underline" : "none";
+}
 
-  // 若目前 active 被隱藏，跳回 home
-  const activeBtn = document.querySelector(".navbtn.active");
-  if(activeBtn && activeBtn.style.display === "none"){
-    activate("home");
+function updateAnnouncementVisibility(page){
+  ANN_PAGE = page || ANN_PAGE;
+
+  if(!ANN || ANN.enabled !== true || !String(ANN.text||"").trim()){
+    announceWrap.style.display = "none";
+    return;
   }
+
+  // home：enabled 就顯示
+  if(ANN_PAGE === "home"){
+    announceWrap.style.display = "";
+    return;
+  }
+
+  // other pages：pages[page] === true
+  const ok = ANN?.pages?.[ANN_PAGE] === true;
+  announceWrap.style.display = ok ? "" : "none";
 }
 
-/* Auth gate + load profile + semester */
+function renderAnnouncement(doc){
+  ANN = doc || null;
+
+  if(!ANN || ANN.enabled !== true || !String(ANN.text||"").trim()){
+    announceWrap.style.display = "none";
+    return;
+  }
+
+  announceText.textContent = ANN.text;
+  applyAnnouncementStyle(ANN.style);
+  updateAnnouncementVisibility(ANN_PAGE);
+}
+
+/* ===== quick jump ===== */
+document.getElementById("btnGoImport").onclick = ()=>activate("import");
+document.getElementById("btnGoRoutes").onclick = ()=>activate("home");
+document.getElementById("btnGoViolations").onclick = ()=>{
+  activate("violation");
+  setViolationPreset("today");
+  runViolationSearch();
+};
+btnGoNotify?.addEventListener("click", ()=>activate("home"));
+
+/* ===== violation UI only ===== */
+function yyyy_mm_dd(d){
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,"0");
+  const day = String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+function startOfWeekMonday(d){
+  const x = new Date(d);
+  const day = x.getDay(); // 0 Sun .. 6 Sat
+  const diff = (day === 0 ? -6 : 1 - day);
+  x.setDate(x.getDate() + diff);
+  x.setHours(0,0,0,0);
+  return x;
+}
+function setViolationPreset(preset){
+  vFilter.value = preset;
+  const now = new Date();
+  const today = yyyy_mm_dd(now);
+
+  if(preset === "today"){
+    vFrom.value = today;
+    vTo.value = today;
+  }else if(preset === "week"){
+    const mon = startOfWeekMonday(now);
+    vFrom.value = yyyy_mm_dd(mon);
+    vTo.value = today;
+  }else if(preset === "pending"){
+    vFrom.value = "";
+    vTo.value = "";
+  }else{
+    vFrom.value = "";
+    vTo.value = "";
+  }
+  updateAppliedText();
+}
+function updateAppliedText(extra){
+  const f = vFilter.value;
+  const from = vFrom.value || "—";
+  const to = vTo.value || "—";
+  const q = vSearch.value.trim() || "（無）";
+  let tag = "全部";
+  if(f==="today") tag="今日違規";
+  if(f==="week") tag="本週違規";
+  if(f==="pending") tag="待審違規";
+  if(f==="custom") tag="自訂期間";
+  vApplied.textContent = `目前套用篩選：${tag}｜期間：${from} ～ ${to}｜搜尋：${q}` + (extra?`｜${extra}`:"");
+}
+vFilter.addEventListener("change", ()=> setViolationPreset(vFilter.value));
+btnVSearch.addEventListener("click", ()=> runViolationSearch());
+
+function runViolationSearch(){
+  let extra = "";
+  if(vFilter.value==="pending") extra = "狀態：待審";
+  updateAppliedText(extra);
+
+  document.getElementById("vList").innerHTML =
+    `這裡將顯示違規清單（下一步接 Firestore：semesters/{semesterId}/violations）。<br>` +
+    `目前：已套用 <b>${(vFilter.value||"all")}</b> 篩選。`;
+}
+
+/* ===== render meta ===== */
+function renderImportStatus(doc){
+  if(!doc){
+    importStatus.innerHTML = "車表匯入狀況：尚未設定";
+    return;
+  }
+  function line(label, o){
+    const imported = o?.imported === true ? "✅ 已匯入" : "❌ 未匯入";
+    const at = o?.importedAt?.toDate ? o.importedAt.toDate().toLocaleString("zh-TW", {hour12:false}) : "";
+    const src = o?.source ? `（來源：${o.source}）` : "";
+    const note = o?.note ? `｜${o.note}` : "";
+    const time = at ? `｜${at}` : "";
+    return `${label}：${imported}${time}${src}${note}`;
+  }
+  importStatus.innerHTML = [
+    "車表匯入狀況：",
+    line("上學", doc.schoolAM),
+    line("週一～四小放學", doc.pmMonThu),
+    line("週五小放學", doc.pmFri),
+    line("大放學", doc.pmBig),
+  ].join("<br>");
+}
+
+function renderMetaDashboard(doc){
+  if(!doc){
+    rtMode.textContent = "今日模式：未設定";
+    rtRoutes.textContent = "第一梯次：—｜第二梯次：—｜接近滿載：—";
+    rtVToday.textContent = "今日違規：—";
+    rtVWeek.textContent = "本週違規：—｜待審：—";
+    return;
+  }
+  rtMode.textContent = "今日模式：" + (doc.todayMode || "未設定");
+
+  const b1 = doc?.routes?.batch1Total ?? 0;
+  const b2 = doc?.routes?.batch2Total ?? 0;
+  const nf = doc?.routes?.nearFullRoutes ?? 0;
+  rtRoutes.textContent = `第一梯次：${b1}｜第二梯次：${b2}｜接近滿載：${nf}`;
+
+  const vt = doc?.violations?.todayCount ?? 0;
+  const vw = doc?.violations?.weekCount ?? 0;
+  const vp = doc?.violations?.pendingCount ?? 0;
+  rtVToday.textContent = `今日違規：${vt}`;
+  rtVWeek.textContent = `本週違規：${vw}｜待審：${vp}`;
+}
+
+function renderNotifications(doc){
+  const c = doc?.unreadCountForAdmin ?? 0;
+  nfAdmin.textContent = `行政未讀通知：${c}`;
+  nfNote.textContent = doc ? "已載入" : "尚未設定";
+}
+
+/* ===== main flow ===== */
+let ACTIVE_SEMESTER_ID = "";
+
 auth.onAuthStateChanged(async (user)=>{
-  if(!user){
-    window.location.href = "index.html";
-    return;
-  }
-
   overlay.style.display = "flex";
-  setOverlay("載入中…","正在驗證登入狀態", 18);
+  overlay.classList.remove("hide");
+  startProgress();
 
-  // 讀取學期
-  setOverlay("載入中…","正在讀取學期資料", 42);
-  let semesterId = "";
   try{
-    const settingsDoc = await db.collection("settings").doc("global").get();
-    semesterId = String(settingsDoc.get("active_semester_id") || "");
-  }catch(e){
-    semesterId = "";
+    if(!user){
+      window.location.href = "index.html";
+      return;
+    }
+
+    // base info
+    userLine1.textContent = "已登入";
+    userLine2.textContent = user.email || "";
+
+    const now = new Date();
+    stTime.textContent = "系統時間：" + now.toLocaleString("zh-TW", { hour12:false });
+
+    // 1) read my user doc
+    let u = null;
+    try{
+      const uDoc = await withTimeout(db.collection("users").doc(user.uid).get(), 9000, "users/uid");
+      u = uDoc.exists ? uDoc.data() : null;
+    }catch(e){
+      console.warn("[users] read failed:", e);
+      u = null;
+    }
+
+    if(!u || u.enabled !== true){
+      await auth.signOut();
+      window.location.href = "index.html";
+      return;
+    }
+
+    userLine1.textContent = `${u.title || "未設定職稱"}｜${u.name || (user.email || "")}`;
+    userLine2.textContent = user.email || "";
+    stAuth.textContent = "狀態：已開通";
+
+    // show admin menu by perms
+    if(navAnn)   navAnn.style.display   = hasPerm(u, "admin.editAnnouncements") ? "" : "none";
+    if(navUsers) navUsers.style.display = hasPerm(u, "admin.manageUsers") ? "" : "none";
+    if(navPerms) navPerms.style.display = hasPerm(u, "admin.managePermissions") ? "" : "none";
+
+    // 2) read settings/global active semester
+    try{
+      const settingsDoc = await withTimeout(db.collection("settings").doc("global").get(), 9000, "settings/global");
+      ACTIVE_SEMESTER_ID = String(settingsDoc.get("active_semester_id") || "");
+    }catch(e){
+      console.warn("[settings/global] read failed:", e);
+      ACTIVE_SEMESTER_ID = "";
+    }
+
+    semesterHint.textContent = "學期：" + (ACTIVE_SEMESTER_ID || "未設定");
+    stSemester.textContent = "目前學期：" + (ACTIVE_SEMESTER_ID || "未設定");
+
+    homeStatus.textContent = "已登入，可開始操作。";
+    homeNotice.textContent = "";
+
+    // 沒學期也先進系統
+    if(!ACTIVE_SEMESTER_ID){
+      // 公告當然也讀不到，先隱藏
+      renderAnnouncement(null);
+      await finishAndEnter();
+      return;
+    }
+
+    // 3) read meta docs (graceful)
+    const metaRef = db.collection("semesters").doc(ACTIVE_SEMESTER_ID).collection("meta");
+
+    const [dashSnap, importSnap, annSnap, notiSnap] = await Promise.all([
+      withTimeout(metaRef.doc("dashboard").get(), 9000, "meta/dashboard").catch(e=>{ console.warn("[meta/dashboard] failed:", e); return null; }),
+      withTimeout(metaRef.doc("importStatus").get(), 9000, "meta/importStatus").catch(e=>{ console.warn("[meta/importStatus] failed:", e); return null; }),
+      withTimeout(metaRef.doc("announcement").get(), 9000, "meta/announcement").catch(e=>{ console.warn("[meta/announcement] failed:", e); return null; }),
+      withTimeout(metaRef.doc("notifications").get(), 9000, "meta/notifications").catch(e=>{ console.warn("[meta/notifications] failed:", e); return null; }),
+    ]);
+
+    const dash = dashSnap && dashSnap.exists ? dashSnap.data() : null;
+    const imp  = importSnap && importSnap.exists ? importSnap.data() : null;
+    const ann  = annSnap && annSnap.exists ? annSnap.data() : null;
+    const noti = notiSnap && notiSnap.exists ? notiSnap.data() : null;
+
+    // Debug: 公告到底讀到什麼（你確定OK了就刪）
+    console.log("ACTIVE_SEMESTER_ID =", ACTIVE_SEMESTER_ID);
+    console.log("ANNOUNCEMENT DOC =", ann);
+
+    renderMetaDashboard(dash);
+    renderImportStatus(imp);
+    renderAnnouncement(ann);
+    renderNotifications(noti);
+
+    // ensure initial page visibility correct
+    updateAnnouncementVisibility("home");
+
+    await finishAndEnter();
+
+  } catch(err){
+    console.error("[dashboard fatal]", err);
+    stopProgress();
+
+    // 不讓你卡住：直接進系統
+    app.style.display = "grid";
+    overlay.classList.add("hide");
+    setTimeout(()=>{ overlay.style.display="none"; }, 260);
   }
-  semesterHint.textContent = "學期：" + (semesterId || "未設定");
-
-  // 讀取使用者資料（職稱+姓名+enabled+scopes）
-  setOverlay("載入中…","正在載入使用者資料", 72);
-  const uDoc = await db.collection("users").doc(user.uid).get();
-  const u = uDoc.exists ? uDoc.data() : null;
-
-  // 未授權者踢回（你之前指定的管理層訊息會在登入頁顯示）
-  if(!u || u.enabled !== true){
-    await auth.signOut();
-    window.location.href = "index.html";
-    return;
-  }
-
-  // 顯示職稱+姓名
-  const title = u.title || "未設定職稱";
-  const name  = u.name  || "";
-  userLine1.textContent = `${title}｜${name || (user.email || "")}`;
-  userLine2.textContent = user.email || "";
-
-  // 套用權限顯示/隱藏選單
-  applyMenuByScopes(u);
-
-  setOverlay("準備完成","正在進入系統", 92);
-
-  homeStatus.textContent = "已登入，可開始操作。";
-  homeNotice.textContent = "提示：學生端資料將顯示「依總務處為準」提醒。";
-
-  setTimeout(showApp, 220);
 });
+
+/* hash jump */
+(function initFromHash(){
+  const h = location.hash || "";
+  if(h.includes("violation")){
+    activate("violation");
+    if(h.includes("filter=today")) { setViolationPreset("today"); runViolationSearch(); }
+    if(h.includes("filter=week")) { setViolationPreset("week"); runViolationSearch(); }
+    if(h.includes("filter=pending")) { setViolationPreset("pending"); runViolationSearch(); }
+  }else{
+    updateAnnouncementVisibility("home");
+  }
+})();
 </script>
 
 </body>

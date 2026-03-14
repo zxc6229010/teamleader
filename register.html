@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>學生註冊｜校專車路隊長管理系統</title>
+
+<style>
+:root{
+  --primary:#0088FF;
+  --primary-dark:#0077E6;
+  --bg1:#eef2f7;
+  --bg2:#e5eaf2;
+  --text:#111827;
+  --muted:#6b7280;
+  --border:#eef2f7;
+}
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans TC",sans-serif;
+}
+body{
+  background:linear-gradient(180deg,var(--bg1),var(--bg2));
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  color:var(--text);
+}
+header{
+  margin-top:50px;
+  text-align:center;
+}
+header img{
+  width:70px;
+  margin-bottom:14px;
+}
+header h1{
+  font-size:28px;
+  font-weight:700;
+  letter-spacing:1px;
+  color:#1f2937;
+}
+header p{
+  margin-top:6px;
+  letter-spacing:4px;
+  font-size:13px;
+  color:#6b7280;
+}
+.card{
+  margin-top:28px;
+  background:white;
+  width:min(420px, calc(100% - 20px));
+  padding:28px 26px;
+  border-radius:18px;
+  box-shadow:0 20px 40px rgba(0,0,0,0.08);
+  border:1px solid var(--border);
+}
+.card h2{
+  font-size:20px;
+  margin-bottom:12px;
+}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 10px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  background:#f9fafb;
+  font-size:12px;
+  color:var(--muted);
+}
+.label{
+  font-size:14px;
+  margin-top:14px;
+  margin-bottom:6px;
+  display:block;
+  color:#374151;
+}
+input{
+  width:100%;
+  padding:12px 14px;
+  border-radius:12px;
+  border:1px solid #e5e7eb;
+  background:#f9fafb;
+  font-size:14px;
+}
+input:focus{
+  outline:none;
+  border:1px solid #3b82f6;
+  background:white;
+}
+button{
+  width:100%;
+  padding:14px;
+  margin-top:18px;
+  border-radius:14px;
+  border:none;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+  transition:all .2s ease;
+  background:var(--primary);
+  color:white;
+}
+button:hover{ background:var(--primary-dark); }
+button:disabled{ opacity:.6; cursor:not-allowed; }
+
+#msg{
+  margin-top:12px;
+  font-size:13px;
+  text-align:center;
+  color:#ef4444;
+  line-height:1.6;
+}
+#ok{
+  margin-top:12px;
+  font-size:13px;
+  text-align:center;
+  color:#16a34a;
+  line-height:1.6;
+}
+.small{
+  margin-top:10px;
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.7;
+}
+footer{
+  margin-top:24px;
+  margin-bottom:30px;
+  font-size:12px;
+  color:#9ca3af;
+}
+.hr{
+  height:1px;
+  background:var(--border);
+  margin:14px 0;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <img src="./schoolbadge.gif" alt="校徽">
+  <h1>校專車路隊長管理系統</h1>
+  <p>TEAMLEADER SYSTEM</p>
+</header>
+
+<div class="card">
+  <h2>學生註冊</h2>
+  <div class="badge" id="badge">驗證中…</div>
+
+  <div class="hr"></div>
+
+  <div id="step1">
+    <div class="small">
+      請確認此頁是由幹部/行政提供的開通條碼進入。<br>
+      系統會先驗證開通碼是否有效，再讓你設定密碼。
+    </div>
+  </div>
+
+  <div id="step2" style="display:none;">
+    <div class="small">
+      你的學號已確認，請設定登入密碼。<br>
+      （之後登入可用「學號」）
+    </div>
+
+    <label class="label">學號（已綁定）</label>
+    <input id="studentId" type="text" disabled>
+
+    <label class="label">設定密碼</label>
+    <input id="pw1" type="password" placeholder="至少 6 碼">
+
+    <label class="label">再輸入一次</label>
+    <input id="pw2" type="password" placeholder="再次輸入密碼">
+
+    <button id="btnRegister">完成註冊</button>
+
+    <div class="small">
+      若你已完成註冊，之後到登入頁輸入學號與密碼即可。
+    </div>
+  </div>
+
+  <div id="msg"></div>
+  <div id="ok"></div>
+</div>
+
+<footer>© TeamLeader</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+
+<script>
+/* ===== Firebase init ===== */
+const firebaseConfig = {
+  apiKey: "AIzaSyAXgHiQ-Kh6cv4kkOFuHVCUOwD-C1HoUQI",
+  authDomain: "teamleader-system.firebaseapp.com",
+  projectId: "teamleader-system",
+};
+if (!firebase.apps || !firebase.apps.length) firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+/* ===== UI ===== */
+const badge = document.getElementById("badge");
+const msg = document.getElementById("msg");
+const ok = document.getElementById("ok");
+
+const step1 = document.getElementById("step1");
+const step2 = document.getElementById("step2");
+
+const studentIdInput = document.getElementById("studentId");
+const pw1 = document.getElementById("pw1");
+const pw2 = document.getElementById("pw2");
+const btnRegister = document.getElementById("btnRegister");
+
+function setBadge(t, good){
+  badge.textContent = t;
+  badge.style.color = good ? "#16a34a" : "#ef4444";
+  badge.style.borderColor = good ? "rgba(22,163,74,.25)" : "rgba(239,68,68,.25)";
+  badge.style.background = good ? "rgba(22,163,74,.08)" : "rgba(239,68,68,.06)";
+}
+function setErr(t){ msg.textContent = t || ""; ok.textContent = ""; }
+function setOk(t){ ok.textContent = t || ""; msg.textContent = ""; }
+
+function qs(name){
+  const u = new URL(location.href);
+  return u.searchParams.get(name);
+}
+function isExpired(expiresAt){
+  // expiresAt 是 Firestore Timestamp
+  if(!expiresAt) return false;
+  const d = expiresAt.toDate ? expiresAt.toDate() : new Date(expiresAt);
+  return Date.now() > d.getTime();
+}
+
+function makeStudentEmail(studentId){
+  // 用學號當登入帳號映射成 email
+  return String(studentId).trim() + "@students.local";
+}
+
+async function validateTokenOrThrow(token){
+  const ref = db.collection("activationTokens").doc(token);
+  const doc = await ref.get();
+  if(!doc.exists) throw new Error("開通碼無效或已失效。");
+  const t = doc.data();
+
+  if(t.used === true) throw new Error("此開通碼已使用，請向車長幹部索取新的開通碼。");
+  if(isExpired(t.expiresAt)) throw new Error("此開通碼已過期，請向車長幹部索取新的開通碼。");
+  if(!t.studentId) throw new Error("開通碼資料異常，請向車長幹部索取新的開通碼。");
+
+  return { ref, data:t };
+}
+
+let TOKEN = "";
+let TOKEN_REF = null;
+let STUDENT_ID = "";
+
+async function init(){
+  setErr("");
+  setOk("");
+  TOKEN = (qs("token") || "").trim();
+
+  if(!TOKEN){
+    setBadge("缺少開通碼", false);
+    setErr("此頁面缺少開通碼（token）。請使用幹部提供的條碼/連結進入。");
+    return;
+  }
+
+  setBadge("驗證開通碼中…", true);
+
+  try{
+    // 不需要先登入
+    const { ref, data } = await validateTokenOrThrow(TOKEN);
+    TOKEN_REF = ref;
+    STUDENT_ID = String(data.studentId);
+
+    setBadge("開通碼有效", true);
+    step1.style.display = "none";
+    step2.style.display = "block";
+    studentIdInput.value = STUDENT_ID;
+
+  }catch(e){
+    console.error(e);
+    setBadge("開通碼無效", false);
+    setErr(e.message || String(e));
+  }
+}
+
+btnRegister.onclick = async ()=>{
+  setErr("");
+  setOk("");
+
+  if(!TOKEN_REF || !STUDENT_ID){
+    setErr("開通碼尚未通過驗證。請重新掃描條碼或向車長幹部索取新的開通碼。");
+    return;
+  }
+
+  const p1 = pw1.value;
+  const p2 = pw2.value;
+
+  if(!p1 || !p2){
+    setErr("請輸入密碼並再次確認。");
+    return;
+  }
+  if(p1.length < 6){
+    setErr("密碼至少需要 6 碼。");
+    return;
+  }
+  if(p1 !== p2){
+    setErr("兩次輸入的密碼不一致。");
+    return;
+  }
+
+  btnRegister.disabled = true;
+
+  try{
+    // 重新驗證 token（避免已被用掉/過期）
+    const { data } = await validateTokenOrThrow(TOKEN);
+
+    // 建立 Auth 帳號（email 用學號映射）
+    const email = makeStudentEmail(STUDENT_ID);
+
+    const cred = await auth.createUserWithEmailAndPassword(email, p1);
+    const user = cred.user;
+
+    // 建立 users/{uid}（讓 dashboard 能讀到）
+    await db.collection("users").doc(user.uid).set({
+      enabled: true,
+      name: "", // 之後匯入學生資料再補
+      title: "學生",
+      studentId: STUDENT_ID,
+      roles: {
+        student: true,
+        busLeader: false,
+        staff: false,
+        admin: false,
+        superAdmin: false,
+      },
+      permissions: {
+        "student.viewSelf": true
+      },
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    }, { merge:true });
+
+    // 標記 token 已使用（防重複註冊）
+    await TOKEN_REF.set({
+      used: true,
+      usedByUid: user.uid,
+      usedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    }, { merge:true });
+
+    setBadge("註冊完成", true);
+    setOk("✅ 註冊完成！即將進入系統…");
+
+    setTimeout(()=>location.href="dashboard.html", 900);
+
+  }catch(e){
+    console.error(e);
+
+    // 常見錯誤處理
+    if(e.code === "auth/email-already-in-use"){
+      setErr("此學號已完成註冊。若忘記密碼，請洽車長幹部/管理員協助。");
+    }else if(e.code === "auth/invalid-email"){
+      setErr("註冊資料格式錯誤，請洽管理員。");
+    }else{
+      setErr("註冊失敗：" + (e.message || String(e)));
+    }
+
+    btnRegister.disabled = false;
+  }
+};
+
+init();
+</script>
+
+</body>
+</html>

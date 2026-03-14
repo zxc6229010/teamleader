@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>校專車路隊長管理系統｜模擬身份</title>
+<style>
+:root{--primary:#0088FF;--primary-dark:#0077E6;--bg1:#eef2f7;--bg2:#e5eaf2;--text:#111827;--muted:#6b7280;--border:#eef2f7;}
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans TC",sans-serif;}
+body{background:linear-gradient(180deg,var(--bg1),var(--bg2));min-height:100vh;color:var(--text);}
+.app{width:min(980px, calc(100% - 20px)); margin:18px auto 24px;}
+.card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:16px;box-shadow:0 20px 40px rgba(0,0,0,0.08);}
+h1{font-size:18px;margin-bottom:6px;}
+p{font-size:12px;color:var(--muted);line-height:1.7;}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-top:12px;}
+.field{display:flex;flex-direction:column;gap:6px;flex:1;min-width:220px;}
+.field label{font-size:12px;color:var(--muted);}
+.field input,.field select{padding:10px 12px;border-radius:14px;border:1px solid var(--border);background:#f9fafb;font-size:13px;}
+.field input:focus,.field select:focus{outline:none;border-color:#cfe3ff;background:#fff;}
+.btn{padding:10px 14px;border-radius:14px;border:none;background:var(--primary);color:#fff;font-weight:900;cursor:pointer;}
+.btn:hover{background:var(--primary-dark);}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid var(--border);border-radius:999px;background:#f9fafb;font-size:12px;color:var(--muted);margin-top:10px;}
+.box{margin-top:12px;padding:12px 14px;border:1px solid var(--border);border-radius:14px;background:#f9fafb;font-size:12px;color:var(--muted);line-height:1.7;word-break:break-all;}
+.smallErr{color:#ef4444;margin-top:10px;font-size:12px;}
+.smallOk{color:#16a34a;margin-top:10px;font-size:12px;}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="card">
+    <h1>模擬身份（免密登入）</h1>
+    <p>只有被授權的管理員可使用。建立一次性 session 後，會得到一個模擬連結（可開新分頁）。</p>
+
+    <div class="row">
+      <div class="field">
+        <label>查找方式</label>
+        <select id="mode">
+          <option value="studentId">用學號（模擬學生最常用）</option>
+          <option value="email">用 Email</option>
+          <option value="uid">用 UID</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>目標（學號 / Email / UID）</label>
+        <input id="target" placeholder="例如：1140123 或 student@example.com">
+      </div>
+
+      <div class="field" style="max-width:180px;">
+        <label>有效分鐘</label>
+        <input id="expMin" type="number" min="1" max="60" value="10">
+      </div>
+
+      <button class="btn" id="btnGo">產生模擬連結</button>
+    </div>
+
+    <div class="badge" id="me">登入狀態：讀取中…</div>
+
+    <div class="box" id="out" style="display:none;"></div>
+    <div class="smallOk" id="ok"></div>
+    <div class="smallErr" id="err"></div>
+
+    <div class="box" style="margin-top:14px;">
+      使用方式建議：<br>
+      1) 產生連結後「開新分頁」測試。<br>
+      2) 你原本的管理員登入不會被登出（學生頁面會用第二個 Firebase app 登入）。<br>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAXgHiQ-Kh6cv4kkOFuHVCUOwD-C1HoUQI",
+  authDomain: "teamleader-system.firebaseapp.com",
+  projectId: "teamleader-system",
+};
+if (!firebase.apps || !firebase.apps.length) firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+
+/* 部署後：這兩個 function URL 會長這樣
+   https://us-central1-teamleader-system.cloudfunctions.net/createImpersonationSession
+   https://us-central1-teamleader-system.cloudfunctions.net/exchangeImpersonationSession
+*/
+const FN_CREATE = "https://us-central1-teamleader-system.cloudfunctions.net/createImpersonationSession";
+
+const mode = document.getElementById("mode");
+const target = document.getElementById("target");
+const expMin = document.getElementById("expMin");
+const btnGo = document.getElementById("btnGo");
+const out = document.getElementById("out");
+const ok = document.getElementById("ok");
+const err = document.getElementById("err");
+const me = document.getElementById("me");
+
+function setErr(t){ err.textContent=t||""; ok.textContent=""; }
+function setOk(t){ ok.textContent=t||""; err.textContent=""; }
+
+function basePath(){
+  return location.pathname.replace(/\/[^\/]*$/, "");
+}
+
+btnGo.onclick = async ()=>{
+  setErr(""); setOk("");
+  out.style.display = "none";
+  out.textContent = "";
+
+  const m = mode.value;
+  const t = target.value.trim();
+  const minutes = Number(expMin.value || 10);
+
+  if(!t){ setErr("請輸入目標（學號/Email/UID）。"); return; }
+  if(!(minutes>=1 && minutes<=60)){ setErr("有效分鐘需 1～60。"); return; }
+
+  try{
+    const idToken = await auth.currentUser?.getIdToken();
+    if(!idToken){ setErr("你尚未登入管理員帳號。"); return; }
+
+    const res = await fetch(FN_CREATE, {
+      method: "POST",
+      headers: {
+        "Content-Type":"application/json",
+        "Authorization": "Bearer " + idToken
+      },
+      body: JSON.stringify({ mode: m, target: t, expiresInMin: minutes })
+    });
+    const data = await res.json().catch(()=>({}));
+
+    if(!res.ok){
+      setErr(data?.error || "建立模擬 session 失敗。");
+      return;
+    }
+
+    const sessionId = data.sessionId;
+    // 你說：模擬學生頁面只要一個頁面（student.html）
+    // 我這裡固定導向 student.html?imp=1&sid=...
+    const link = `${location.origin}${basePath()}/student.html?imp=1&sid=${encodeURIComponent(sessionId)}`;
+
+    out.style.display = "block";
+    out.innerHTML = `模擬連結：<br><b>${link}</b><br><br>有效至：${data.expiresAt}`;
+    setOk("✅ 已產生模擬連結（建議開新分頁）");
+
+    // 直接開新分頁
+    window.open(link, "_blank", "noopener,noreferrer");
+
+  }catch(e){
+    console.error(e);
+    setErr("建立失敗（請確認 Functions 已部署 + 你有 admin.impersonate 權限）。");
+  }
+};
+
+auth.onAuthStateChanged((u)=>{
+  if(!u){
+    me.textContent = "登入狀態：未登入（請先用管理員登入 index.html）";
+    return;
+  }
+  me.textContent = "登入狀態：已登入｜" + (u.email || u.uid);
+});
+</script>
+</body>
+</html>
