@@ -312,14 +312,18 @@ a{ color:inherit; text-decoration:none; }
 .formRow{ display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; align-items:flex-end; }
 .field{ display:flex; flex-direction:column; gap:6px; }
 .field label{ font-size:12px; color:var(--muted); }
-.field input, .field select{
+.field input, .field select, .field textarea{
   padding:10px 12px;
   border-radius:14px;
   border:1px solid var(--border);
   background:#f9fafb;
   font-size:13px;
 }
-.field input:focus, .field select:focus{
+.field textarea{
+  min-height:90px;
+  resize:vertical;
+}
+.field input:focus, .field select:focus, .field textarea:focus{
   outline:none;
   border-color:#cfe3ff;
   background:#fff;
@@ -342,6 +346,26 @@ a{ color:inherit; text-decoration:none; }
   background:#f9fafb;
   font-size:12px;
   color:var(--muted);
+  line-height:1.7;
+}
+.successBox{
+  margin-top:12px;
+  padding:12px 14px;
+  border:1px solid #d1fae5;
+  border-radius:14px;
+  background:#ecfdf5;
+  font-size:12px;
+  color:#065f46;
+  line-height:1.7;
+}
+.errorBox{
+  margin-top:12px;
+  padding:12px 14px;
+  border:1px solid #fecaca;
+  border-radius:14px;
+  background:#fef2f2;
+  font-size:12px;
+  color:#991b1b;
   line-height:1.7;
 }
 
@@ -452,19 +476,19 @@ a{ color:inherit; text-decoration:none; }
         </div>
       </div>
 
-      <div class="navbtn" data-target="violation">
-        <div class="icon">🧾</div>
+      <div class="navbtn" data-target="violation-create">
+        <div class="icon">✍️</div>
         <div class="navlabel">
-          <b>違規彙整</b>
-          <span>查詢與管理紀錄</span>
+          <b>違規登記</b>
+          <span>新增違規紀錄</span>
         </div>
       </div>
 
-      <div class="navbtn" id="navCreateViolation" onclick="location.href='violation-create.html'" style="display:none;">
-        <div class="icon">⚠️</div>
+      <div class="navbtn" data-target="violation-list">
+        <div class="icon">📋</div>
         <div class="navlabel">
-          <b>新增違規</b>
-          <span>建立違規紀錄</span>
+          <b>違規紀錄</b>
+          <span>查詢與管理</span>
         </div>
       </div>
 
@@ -492,7 +516,6 @@ a{ color:inherit; text-decoration:none; }
         </div>
       </div>
 
-      <!-- 後台頁（獨立頁面） -->
       <div class="navbtn" id="navUsers" data-href="admin-users.html" style="display:none;">
         <div class="icon">👥</div>
         <div class="navlabel">
@@ -607,7 +630,7 @@ a{ color:inherit; text-decoration:none; }
               <b id="rtVToday">今日違規：—</b>
               <span id="rtVWeek">本週違規：—｜待審：—</span>
             </div>
-            <button class="miniBtn" id="btnGoViolations">查看</button>
+            <button class="miniBtn" id="btnGoViolationList">查看</button>
           </div>
 
           <div class="mutedBox" id="rtHint">右側「查看」會直接切換到對應功能並自動套用篩選。</div>
@@ -636,11 +659,55 @@ a{ color:inherit; text-decoration:none; }
       </div>
     </section>
 
-    <!-- ====== VIOLATION ====== -->
-    <section class="section" id="sec-violation">
+    <!-- ====== VIOLATION CREATE ====== -->
+    <section class="section" id="sec-violation-create">
       <div class="card">
-        <h3>違規彙整</h3>
-        <p>這裡是查詢與管理違規紀錄；若要建立新違規，請使用左側「新增違規」。</p>
+        <h3>違規登記</h3>
+        <p>輸入學號或班級座號後，建立新的違規紀錄。</p>
+
+        <div class="formRow">
+          <div class="field" style="min-width:240px;flex:1;">
+            <label>學號 / 班級座號</label>
+            <input id="vCreateKeyword" type="text" placeholder="例如：1140123 或 60512">
+          </div>
+
+          <div class="field">
+            <label>違規類型</label>
+            <select id="vCreateType">
+              <option value="未排隊">未排隊</option>
+              <option value="喧嘩">喧嘩</option>
+              <option value="遲到">遲到</option>
+              <option value="未依規定候車">未依規定候車</option>
+              <option value="其他">其他</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="formRow">
+          <div class="field" style="min-width:100%;flex:1;">
+            <label>備註</label>
+            <textarea id="vCreateNote" placeholder="可輸入補充說明（可留空）"></textarea>
+          </div>
+        </div>
+
+        <div class="formRow">
+          <button class="primaryBtn" id="btnCreateViolation">送出登記</button>
+        </div>
+
+        <div class="mutedBox" id="vCreateHint">
+          目前先完成頁面骨架。下一步可接 Firestore：依學號/班座找學生，寫入 semesters/{semesterId}/violations。
+        </div>
+
+        <div class="successBox" id="vCreateOk" style="display:none;"></div>
+        <div class="errorBox" id="vCreateErr" style="display:none;"></div>
+      </div>
+    </section>
+
+    <!-- ====== VIOLATION LIST ====== -->
+    <section class="section" id="sec-violation-list">
+      <div class="card">
+        <h3>違規紀錄</h3>
+        <p>查詢、篩選與後續管理違規紀錄。</p>
 
         <div class="formRow">
           <div class="field">
@@ -759,6 +826,7 @@ const rtVWeek = document.getElementById("rtVWeek");
 const nfAdmin = document.getElementById("nfAdmin");
 const nfNote = document.getElementById("nfNote");
 const btnGoNotify = document.getElementById("btnGoNotify");
+const btnGoViolationList = document.getElementById("btnGoViolationList");
 
 const announceWrap = document.getElementById("announceWrap");
 const announceText = document.getElementById("announceText");
@@ -770,6 +838,13 @@ const vSearch = document.getElementById("vSearch");
 const btnVSearch = document.getElementById("btnVSearch");
 const vApplied = document.getElementById("vApplied");
 
+const vCreateKeyword = document.getElementById("vCreateKeyword");
+const vCreateType = document.getElementById("vCreateType");
+const vCreateNote = document.getElementById("vCreateNote");
+const btnCreateViolation = document.getElementById("btnCreateViolation");
+const vCreateOk = document.getElementById("vCreateOk");
+const vCreateErr = document.getElementById("vCreateErr");
+
 const sidebar = document.getElementById("sidebar");
 const backdrop = document.getElementById("drawerBackdrop");
 const btnHamburger = document.getElementById("btnHamburger");
@@ -777,7 +852,6 @@ const btnHamburger = document.getElementById("btnHamburger");
 const navAnn = document.getElementById("navAnn");
 const navUsers = document.getElementById("navUsers");
 const navPerms = document.getElementById("navPerms");
-const navCreateViolation = document.getElementById("navCreateViolation");
 
 /* ===== helpers ===== */
 function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
@@ -831,7 +905,6 @@ backdrop.addEventListener("click", closeDrawer);
 /* ===== navigation ===== */
 function activate(target){
   document.querySelectorAll(".navbtn").forEach(b=>{
-    if(!b.dataset.target) return;
     b.classList.toggle("active", b.dataset.target === target);
   });
   document.querySelectorAll(".section").forEach(s=>{
@@ -841,16 +914,14 @@ function activate(target){
   const map = {
     home: ["總覽","本學期狀態與提醒"],
     import: ["匯入中心","學生/車表/名單"],
-    violation: ["違規彙整","查詢與管理紀錄"],
+    "violation-create": ["違規登記","新增違規紀錄"],
+    "violation-list": ["違規紀錄","查詢與管理"],
     query: ["查詢","學生/車長資料"],
     audit: ["操作紀錄","依時間序搜尋"],
     settings: ["系統設定","學期/權限/封存"],
   };
-
-  if(map[target]){
-    document.getElementById("pageTitle").textContent = map[target][0];
-    document.getElementById("pageSub").textContent   = map[target][1];
-  }
+  document.getElementById("pageTitle").textContent = map[target][0];
+  document.getElementById("pageSub").textContent   = map[target][1];
 
   updateAnnouncementVisibility(target);
   closeDrawer();
@@ -859,10 +930,6 @@ function activate(target){
 document.getElementById("nav").addEventListener("click", (e)=>{
   const btn = e.target.closest(".navbtn");
   if(!btn) return;
-
-  if(btn.id === "navCreateViolation"){
-    return;
-  }
 
   if(btn.dataset.href){
     window.location.href = btn.dataset.href;
@@ -931,14 +998,44 @@ function renderAnnouncement(doc){
 /* ===== quick jump ===== */
 document.getElementById("btnGoImport").onclick = ()=>activate("import");
 document.getElementById("btnGoRoutes").onclick = ()=>activate("home");
-document.getElementById("btnGoViolations").onclick = ()=>{
-  activate("violation");
+btnGoViolationList?.addEventListener("click", ()=>{
+  activate("violation-list");
   setViolationPreset("today");
   runViolationSearch();
-};
+});
 btnGoNotify?.addEventListener("click", ()=>activate("home"));
 
-/* ===== violation UI only ===== */
+/* ===== violation create UI only ===== */
+btnCreateViolation?.addEventListener("click", ()=>{
+  vCreateOk.style.display = "none";
+  vCreateErr.style.display = "none";
+  vCreateOk.textContent = "";
+  vCreateErr.textContent = "";
+
+  const keyword = (vCreateKeyword.value || "").trim();
+  const type = (vCreateType.value || "").trim();
+  const note = (vCreateNote.value || "").trim();
+
+  if(!keyword){
+    vCreateErr.style.display = "";
+    vCreateErr.textContent = "請先輸入學號或班級座號。";
+    return;
+  }
+
+  if(!type){
+    vCreateErr.style.display = "";
+    vCreateErr.textContent = "請先選擇違規類型。";
+    return;
+  }
+
+  vCreateOk.style.display = "";
+  vCreateOk.innerHTML =
+    `目前已完成頁面驗證。<br>` +
+    `下一步會依「${keyword}」查找學生，並寫入 semesters/{semesterId}/violations。<br>` +
+    `違規類型：${type}` + (note ? `<br>備註：${note}` : "");
+});
+
+/* ===== violation list UI only ===== */
 function yyyy_mm_dd(d){
   const y = d.getFullYear();
   const m = String(d.getMonth()+1).padStart(2,"0");
@@ -1093,17 +1190,6 @@ auth.onAuthStateChanged(async (user)=>{
     if(navUsers) navUsers.style.display = hasPerm(u, "admin.manageUsers") ? "" : "none";
     if(navPerms) navPerms.style.display = hasPerm(u, "admin.managePermissions") ? "" : "none";
 
-    const canCreateViolation =
-      u?.roles?.superAdmin === true ||
-      u?.roles?.admin === true ||
-      u?.roles?.staff === true ||
-      u?.roles?.busLeader === true ||
-      u?.permissions?.["violation.create"] === true;
-
-    if(navCreateViolation){
-      navCreateViolation.style.display = canCreateViolation ? "" : "none";
-    }
-
     try{
       const settingsDoc = await withTimeout(db.collection("settings").doc("global").get(), 9000, "settings/global");
       ACTIVE_SEMESTER_ID = String(settingsDoc.get("active_semester_id") || "");
@@ -1159,8 +1245,10 @@ auth.onAuthStateChanged(async (user)=>{
 /* hash jump */
 (function initFromHash(){
   const h = location.hash || "";
-  if(h.includes("violation")){
-    activate("violation");
+  if(h.includes("violation-create")){
+    activate("violation-create");
+  }else if(h.includes("violation-list")){
+    activate("violation-list");
     if(h.includes("filter=today")) { setViolationPreset("today"); runViolationSearch(); }
     if(h.includes("filter=week")) { setViolationPreset("week"); runViolationSearch(); }
     if(h.includes("filter=pending")) { setViolationPreset("pending"); runViolationSearch(); }
