@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<title>違規單列印</title>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+
+<!-- 條碼 -->
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+
+<style>
+body{
+  font-family:"Noto Sans TC", sans-serif;
+  padding:20px;
+  background:white;
+}
+
+.sheet{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+
+.card{
+  border:1px solid #000;
+  padding:12px;
+  height:260px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+.title{
+  font-weight:bold;
+  text-align:center;
+  font-size:16px;
+}
+
+.row{
+  font-size:13px;
+  margin-top:4px;
+}
+
+.barcode{
+  margin-top:6px;
+  text-align:center;
+}
+
+.sign{
+  display:flex;
+  justify-content:space-between;
+  margin-top:10px;
+  font-size:12px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>違規單列印</h2>
+
+<div class="sheet" id="sheet"></div>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAXgHiQ-Kh6cv4kkOFuHVCUOwD-C1HoUQI",
+  authDomain: "teamleader-system.firebaseapp.com",
+  projectId: "teamleader-system",
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// 👉 改成你現在學期
+const semesterId = "CURRENT_SEMESTER";
+
+async function load(){
+  const snap = await db
+    .collection("semesters")
+    .doc(semesterId)
+    .collection("violations")
+    .where("status","==","待列印")
+    .limit(20)
+    .get();
+
+  const sheet = document.getElementById("sheet");
+  sheet.innerHTML = "";
+
+  snap.forEach(doc=>{
+    const v = doc.data();
+
+    const el = document.createElement("div");
+    el.className = "card";
+
+    el.innerHTML = `
+      <div>
+        <div class="title">校專車違規通知單</div>
+
+        <div class="row">單號：${v.violationNo || ""}</div>
+        <div class="row">學號：${v.studentId || ""}</div>
+        <div class="row">班級座號：${v.classSeat || ""}</div>
+        <div class="row">姓名：${v.studentName || ""}</div>
+        <div class="row">違規類型：${v.type || ""}</div>
+        <div class="row">說明：${v.note || ""}</div>
+      </div>
+
+      <div>
+        <svg class="barcode"></svg>
+
+        <div class="sign">
+          <span>學生簽名：________</span>
+          <span>車長：________</span>
+        </div>
+      </div>
+    `;
+
+    sheet.appendChild(el);
+
+    JsBarcode(el.querySelector("svg"), v.barcodeValue || v.violationNo, {
+      format: "CODE128",
+      width: 2,
+      height: 40,
+      displayValue: false
+    });
+  });
+}
+
+load();
+</script>
+
+</body>
+</html>
