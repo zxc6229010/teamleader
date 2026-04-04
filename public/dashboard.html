@@ -14,13 +14,15 @@
   --text:#111827;
   --muted:#6b7280;
   --border:#eef2f7;
-  --danger:#ef4444;
   --success:#16a34a;
+  --danger:#ef4444;
+  --warn:#f59e0b;
 }
 *{ box-sizing:border-box; margin:0; padding:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans TC",sans-serif; }
 body{ background:linear-gradient(180deg,var(--bg1),var(--bg2)); min-height:100vh; color:var(--text); }
 a{ color:inherit; text-decoration:none; }
 
+/* ===== Layout ===== */
 .app{
   width:min(1200px, calc(100% - 32px));
   margin:22px auto 26px;
@@ -33,6 +35,7 @@ a{ color:inherit; text-decoration:none; }
   .app{ grid-template-columns: 1fr; width:calc(100% - 20px); margin:14px auto 18px; }
 }
 
+/* ===== Sidebar ===== */
 .sidebar{
   background:white;
   border-radius:18px;
@@ -87,6 +90,7 @@ a{ color:inherit; text-decoration:none; }
 }
 .logout:hover{ background:var(--primary-dark); }
 
+/* ===== Main ===== */
 .main{
   background:white;
   border-radius:18px;
@@ -133,6 +137,7 @@ a{ color:inherit; text-decoration:none; }
 .userinfo b{ font-size:13px; color:var(--text); }
 .userinfo span{ font-size:12px; color:var(--muted); }
 
+/* Sections */
 .section{ display:none; animation: fadeUp .22s ease; }
 .section.active{ display:block; }
 @keyframes fadeUp{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:translateY(0); } }
@@ -150,6 +155,7 @@ a{ color:inherit; text-decoration:none; }
 .card p{ font-size:12px; color:var(--muted); line-height:1.7; }
 .notice{ margin-top:10px; font-size:12px; color:var(--muted); line-height:1.6; }
 
+/* ===== Loading overlay ===== */
 .overlay{
   position:fixed;
   inset:0;
@@ -253,6 +259,7 @@ a{ color:inherit; text-decoration:none; }
 .w60{ width:60%; } .w68{ width:68%; } .w70{ width:70%; } .w72{ width:72%; }
 .w85{ width:85%; } .w90{ width:90%; } .w92{ width:92%; }
 
+/* ===== Mobile drawer behavior ===== */
 .drawerBackdrop{
   display:none;
   position:fixed;
@@ -278,6 +285,7 @@ a{ color:inherit; text-decoration:none; }
   .drawerBackdrop.show{ display:block; }
 }
 
+/* helpers */
 .row{
   display:flex; align-items:center; justify-content:space-between;
   gap:10px; padding:10px 0;
@@ -293,6 +301,10 @@ a{ color:inherit; text-decoration:none; }
   border-radius:999px; background:#f9fafb;
   font-size:12px; color:var(--muted);
 }
+.pill.pending{ color:#92400e; background:#fffbeb; border-color:#fde68a; }
+.pill.approved{ color:#065f46; background:#ecfdf5; border-color:#d1fae5; }
+.pill.void{ color:#991b1b; background:#fef2f2; border-color:#fecaca; }
+
 .miniBtn{
   padding:7px 10px;
   border-radius:12px;
@@ -314,6 +326,9 @@ a{ color:inherit; text-decoration:none; }
   background:#f9fafb;
   font-size:13px;
 }
+.field input[type="file"]{
+  padding:8px 10px;
+}
 .field textarea{
   min-height:90px;
   resize:vertical;
@@ -333,6 +348,10 @@ a{ color:inherit; text-decoration:none; }
   cursor:pointer;
 }
 .primaryBtn:hover{ background:var(--primary-dark); }
+.primaryBtn:disabled{
+  opacity:.65;
+  cursor:not-allowed;
+}
 .mutedBox{
   margin-top:12px;
   padding:12px 14px;
@@ -363,6 +382,31 @@ a{ color:inherit; text-decoration:none; }
   color:#991b1b;
   line-height:1.7;
 }
+
+.statGrid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+}
+@media (max-width:900px){
+  .statGrid{ grid-template-columns:repeat(2,1fr); }
+}
+.statCard{
+  background:#f9fafb;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:14px;
+}
+.statCard b{
+  display:block;
+  font-size:20px;
+  margin-bottom:4px;
+}
+.statCard span{
+  font-size:12px;
+  color:var(--muted);
+}
+
 .listCard{
   border:1px solid var(--border);
   border-radius:16px;
@@ -370,21 +414,25 @@ a{ color:inherit; text-decoration:none; }
   background:#fff;
   margin-top:10px;
 }
-.listCard .title{
+.listHeader{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+}
+.listTitle{
   font-size:14px;
   font-weight:800;
   color:#111827;
 }
-.listCard .sub{
+.listSub{
   margin-top:6px;
   font-size:12px;
   color:var(--muted);
   line-height:1.7;
 }
 .fileRow{
-  margin-top:6px;
-  font-size:12px;
-  color:#374151;
+  margin-top:8px;
   display:flex;
   flex-wrap:wrap;
   gap:8px;
@@ -392,12 +440,16 @@ a{ color:inherit; text-decoration:none; }
 .fileLink{
   display:inline-flex;
   align-items:center;
-  padding:4px 8px;
+  gap:6px;
+  padding:6px 10px;
   border-radius:999px;
   border:1px solid var(--border);
   background:#f9fafb;
+  font-size:12px;
+  color:#374151;
 }
 
+/* ===== Announcement Marquee ===== */
 .announceWrap{
   display:none;
   margin:0 0 12px;
@@ -440,6 +492,7 @@ a{ color:inherit; text-decoration:none; }
 
 <body>
 
+<!-- Loading Overlay -->
 <div class="overlay" id="overlay" aria-hidden="false">
   <div class="loadPanel">
     <div class="loadTopBar">
@@ -476,6 +529,7 @@ a{ color:inherit; text-decoration:none; }
 <div class="drawerBackdrop" id="drawerBackdrop"></div>
 
 <div class="app" id="app" style="display:none;">
+  <!-- Sidebar -->
   <aside class="sidebar" id="sidebar">
     <div class="brand">
       <img src="./schoolbadge.gif" alt="校徽">
@@ -514,7 +568,7 @@ a{ color:inherit; text-decoration:none; }
         <div class="icon">📋</div>
         <div class="navlabel">
           <b>違規紀錄</b>
-          <span>查詢與管理</span>
+          <span>查詢與審核</span>
         </div>
       </div>
 
@@ -542,6 +596,7 @@ a{ color:inherit; text-decoration:none; }
         </div>
       </div>
 
+      <!-- 後台頁（獨立頁面） -->
       <div class="navbtn" id="navUsers" data-href="admin-users.html" style="display:none;">
         <div class="icon">👥</div>
         <div class="navlabel">
@@ -574,6 +629,7 @@ a{ color:inherit; text-decoration:none; }
     </div>
   </aside>
 
+  <!-- Main -->
   <main class="main">
     <div class="topbar">
       <div class="leftTop">
@@ -601,6 +657,7 @@ a{ color:inherit; text-decoration:none; }
       </div>
     </div>
 
+    <!-- 公告跑馬燈 -->
     <div class="announceWrap" id="announceWrap">
       <div class="announceInner">
         <div class="announceIcon">!</div>
@@ -613,6 +670,7 @@ a{ color:inherit; text-decoration:none; }
       </div>
     </div>
 
+    <!-- ====== HOME ====== -->
     <section class="section active" id="sec-home">
       <div class="grid">
         <div class="card">
@@ -653,7 +711,7 @@ a{ color:inherit; text-decoration:none; }
               <b id="rtVToday">今日違規：—</b>
               <span id="rtVWeek">本週違規：—｜待審：—</span>
             </div>
-            <button class="miniBtn" id="btnGoViolationList">查看</button>
+            <button class="miniBtn" id="btnGoViolations">查看</button>
           </div>
 
           <div class="mutedBox" id="rtHint">右側「查看」會直接切換到對應功能並自動套用篩選。</div>
@@ -661,18 +719,17 @@ a{ color:inherit; text-decoration:none; }
       </div>
 
       <div class="card" style="margin-top:14px;">
-        <h3>通知中心</h3>
-        <div class="row">
-          <div class="kpi">
-            <b id="nfAdmin">行政未讀通知：—</b>
-            <span id="nfHint">（行政處理/回覆/轉送都會在這裡提示）</span>
-          </div>
-          <button class="miniBtn" id="btnGoNotify">查看</button>
+        <h3>違規統計</h3>
+        <div class="statGrid">
+          <div class="statCard"><b id="statAll">0</b><span>全部違規</span></div>
+          <div class="statCard"><b id="statPending">0</b><span>待審</span></div>
+          <div class="statCard"><b id="statApproved">0</b><span>已通過</span></div>
+          <div class="statCard"><b id="statVoided">0</b><span>已作廢</span></div>
         </div>
-        <div class="notice" id="nfNote">—</div>
       </div>
     </section>
 
+    <!-- ====== IMPORT ====== -->
     <section class="section" id="sec-import">
       <div class="card">
         <h3>匯入中心</h3>
@@ -681,10 +738,11 @@ a{ color:inherit; text-decoration:none; }
       </div>
     </section>
 
+    <!-- ====== VIOLATION CREATE ====== -->
     <section class="section" id="sec-violation-create">
       <div class="card">
         <h3>違規登記</h3>
-        <p>輸入學號或班級座號後，建立新的違規紀錄。</p>
+        <p>輸入學號或班級座號後，系統會先核對學生名單，查得到才可送出。</p>
 
         <div class="formRow">
           <div class="field" style="min-width:240px;flex:1;">
@@ -723,9 +781,9 @@ a{ color:inherit; text-decoration:none; }
           <button class="primaryBtn" id="btnCreateViolation">送出登記</button>
         </div>
 
-        <div class="mutedBox">
-          這版已加入前端驗證與附件欄位。<br>
-          若要真的上傳附件，請先確認 Firebase Storage 已啟用，且 Storage Rules 允許已登入使用者寫入。
+        <div class="mutedBox" id="vCreateHint">
+          目前會先查 users 集合中的 studentId / classSeat。<br>
+          查不到學生名單，就會登記失敗。
         </div>
 
         <div class="successBox" id="vCreateOk" style="display:none;"></div>
@@ -733,10 +791,11 @@ a{ color:inherit; text-decoration:none; }
       </div>
     </section>
 
+    <!-- ====== VIOLATION LIST ====== -->
     <section class="section" id="sec-violation-list">
       <div class="card">
         <h3>違規紀錄</h3>
-        <p>查詢、篩選與顯示違規紀錄。</p>
+        <p>可搜尋、篩選並對待審紀錄做審核或作廢。</p>
 
         <div class="formRow">
           <div class="field">
@@ -761,7 +820,7 @@ a{ color:inherit; text-decoration:none; }
           </div>
 
           <div class="field" style="min-width:240px;flex:1;">
-            <label>搜尋（學號 / 關鍵字）</label>
+            <label>搜尋（學號 / 姓名 / 關鍵字）</label>
             <input id="vSearch" type="text" placeholder="輸入後按搜尋" />
           </div>
 
@@ -773,6 +832,7 @@ a{ color:inherit; text-decoration:none; }
       </div>
     </section>
 
+    <!-- ====== QUERY ====== -->
     <section class="section" id="sec-query">
       <div class="card">
         <h3>查詢</h3>
@@ -780,6 +840,7 @@ a{ color:inherit; text-decoration:none; }
       </div>
     </section>
 
+    <!-- ====== AUDIT ====== -->
     <section class="section" id="sec-audit">
       <div class="card">
         <h3>操作紀錄</h3>
@@ -787,6 +848,7 @@ a{ color:inherit; text-decoration:none; }
       </div>
     </section>
 
+    <!-- ====== SETTINGS ====== -->
     <section class="section" id="sec-settings">
       <div class="card">
         <h3>系統設定</h3>
@@ -804,6 +866,7 @@ a{ color:inherit; text-decoration:none; }
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-storage-compat.js"></script>
 
 <script>
+/* ===== Firebase init ===== */
 const firebaseConfig = {
   apiKey: "AIzaSyAXgHiQ-Kh6cv4kkOFuHVCUOwD-C1HoUQI",
   authDomain: "teamleader-system.firebaseapp.com",
@@ -815,6 +878,7 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 const storage = firebase.storage();
 
+/* ===== role guard ===== */
 const activeRole = sessionStorage.getItem("activeRole");
 if(!activeRole){
   window.location.href = "index.html";
@@ -823,6 +887,7 @@ if(activeRole === "student"){
   window.location.href = "student.html";
 }
 
+/* ===== UI refs ===== */
 const overlay = document.getElementById("overlay");
 const loadBar = document.getElementById("loadBar");
 const app = document.getElementById("app");
@@ -831,13 +896,9 @@ const semesterHint = document.getElementById("semesterHint");
 const userLine1 = document.getElementById("userLine1");
 const userLine2 = document.getElementById("userLine2");
 
-const homeStatus = document.getElementById("homeStatus");
-const homeNotice = document.getElementById("homeNotice");
-
 const stSemester = document.getElementById("stSemester");
 const stTime = document.getElementById("stTime");
 const stAuth = document.getElementById("stAuth");
-
 const importStatus = document.getElementById("importStatus");
 
 const rtMode = document.getElementById("rtMode");
@@ -845,21 +906,13 @@ const rtRoutes = document.getElementById("rtRoutes");
 const rtVToday = document.getElementById("rtVToday");
 const rtVWeek = document.getElementById("rtVWeek");
 
-const nfAdmin = document.getElementById("nfAdmin");
-const nfNote = document.getElementById("nfNote");
-const btnGoNotify = document.getElementById("btnGoNotify");
-const btnGoViolationList = document.getElementById("btnGoViolationList");
+const statAll = document.getElementById("statAll");
+const statPending = document.getElementById("statPending");
+const statApproved = document.getElementById("statApproved");
+const statVoided = document.getElementById("statVoided");
 
 const announceWrap = document.getElementById("announceWrap");
 const announceText = document.getElementById("announceText");
-
-const vFilter = document.getElementById("vFilter");
-const vFrom = document.getElementById("vFrom");
-const vTo = document.getElementById("vTo");
-const vSearch = document.getElementById("vSearch");
-const btnVSearch = document.getElementById("btnVSearch");
-const vApplied = document.getElementById("vApplied");
-const vListBox = document.getElementById("vListBox");
 
 const vCreateKeyword = document.getElementById("vCreateKeyword");
 const vCreateType = document.getElementById("vCreateType");
@@ -870,6 +923,14 @@ const btnCreateViolation = document.getElementById("btnCreateViolation");
 const vCreateOk = document.getElementById("vCreateOk");
 const vCreateErr = document.getElementById("vCreateErr");
 
+const vFilter = document.getElementById("vFilter");
+const vFrom = document.getElementById("vFrom");
+const vTo = document.getElementById("vTo");
+const vSearch = document.getElementById("vSearch");
+const btnVSearch = document.getElementById("btnVSearch");
+const vApplied = document.getElementById("vApplied");
+const vListBox = document.getElementById("vListBox");
+
 const sidebar = document.getElementById("sidebar");
 const backdrop = document.getElementById("drawerBackdrop");
 const btnHamburger = document.getElementById("btnHamburger");
@@ -878,7 +939,13 @@ const navAnn = document.getElementById("navAnn");
 const navUsers = document.getElementById("navUsers");
 const navPerms = document.getElementById("navPerms");
 
+const btnGoImport = document.getElementById("btnGoImport");
+const btnGoRoutes = document.getElementById("btnGoRoutes");
+const btnGoViolations = document.getElementById("btnGoViolations");
+
+/* ===== helpers ===== */
 function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
+
 function withTimeout(promise, ms, label){
   return new Promise((resolve, reject)=>{
     const t = setTimeout(()=>reject(new Error(`timeout:${label||"task"}:${ms}ms`)), ms);
@@ -888,6 +955,7 @@ function withTimeout(promise, ms, label){
     );
   });
 }
+
 function escapeHtml(s){
   return String(s ?? "")
     .replaceAll("&","&amp;")
@@ -896,18 +964,45 @@ function escapeHtml(s){
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#39;");
 }
+
 function fmtTs(ts){
-  if(!ts) return "—";
   try{
+    if(!ts) return "—";
     const d = ts.toDate ? ts.toDate() : new Date(ts);
     return d.toLocaleString("zh-TW",{hour12:false});
-  }catch(_){
-    return "—";
-  }
+  }catch(_){ return "—"; }
 }
 
+function yyyy_mm_dd(d){
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,"0");
+  const day = String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+
+function startOfWeekMonday(d){
+  const x = new Date(d);
+  const day = x.getDay();
+  const diff = (day === 0 ? -6 : 1 - day);
+  x.setDate(x.getDate() + diff);
+  x.setHours(0,0,0,0);
+  return x;
+}
+
+function badgeClass(status){
+  if(status === "已通過") return "approved";
+  if(status === "已作廢") return "void";
+  return "pending";
+}
+
+function hasPerm(u, key){
+  return u?.roles?.superAdmin === true || u?.permissions?.[key] === true;
+}
+
+/* ===== loading progress ===== */
 let prog = 0;
 let progTimer = null;
+
 function startProgress(){
   stopProgress();
   prog = 8;
@@ -933,11 +1028,13 @@ async function finishAndEnter(){
   overlay.style.display = "none";
 }
 
+/* ===== Drawer ===== */
 function openDrawer(){ sidebar.classList.add("open"); backdrop.classList.add("show"); }
 function closeDrawer(){ sidebar.classList.remove("open"); backdrop.classList.remove("show"); }
 btnHamburger.addEventListener("click", openDrawer);
 backdrop.addEventListener("click", closeDrawer);
 
+/* ===== navigation ===== */
 function activate(target){
   document.querySelectorAll(".navbtn").forEach(b=>{
     b.classList.toggle("active", b.dataset.target === target);
@@ -950,7 +1047,7 @@ function activate(target){
     home: ["總覽","本學期狀態與提醒"],
     import: ["匯入中心","學生/車表/名單"],
     "violation-create": ["違規登記","新增違規紀錄"],
-    "violation-list": ["違規紀錄","查詢與管理"],
+    "violation-list": ["違規紀錄","查詢與審核"],
     query: ["查詢","學生/車長資料"],
     audit: ["操作紀錄","依時間序搜尋"],
     settings: ["系統設定","學期/權限/封存"],
@@ -976,16 +1073,14 @@ document.getElementById("nav").addEventListener("click", (e)=>{
   }
 });
 
+/* logout */
 document.getElementById("btnLogout").onclick = async ()=>{
   sessionStorage.removeItem("activeRole");
   await auth.signOut();
   window.location.href = "index.html";
 };
 
-function hasPerm(u, key){
-  return u?.roles?.superAdmin === true || u?.permissions?.[key] === true;
-}
-
+/* ===== announcement ===== */
 let ANN = null;
 let ANN_PAGE = "home";
 
@@ -996,62 +1091,94 @@ function applyAnnouncementStyle(style){
   announceText.style.fontStyle = st.italic ? "italic" : "normal";
   announceText.style.textDecoration = st.underline ? "underline" : "none";
 }
+
 function updateAnnouncementVisibility(page){
   ANN_PAGE = page || ANN_PAGE;
+
   if(!ANN || ANN.enabled !== true || !String(ANN.text||"").trim()){
     announceWrap.style.display = "none";
     return;
   }
+
   if(ANN_PAGE === "home"){
     announceWrap.style.display = "";
     return;
   }
+
   const ok = ANN?.pages?.[ANN_PAGE] === true;
   announceWrap.style.display = ok ? "" : "none";
 }
+
 function renderAnnouncement(doc){
   ANN = doc || null;
+
   if(!ANN || ANN.enabled !== true || !String(ANN.text||"").trim()){
     announceWrap.style.display = "none";
     return;
   }
+
   announceText.textContent = ANN.text;
   applyAnnouncementStyle(ANN.style);
   updateAnnouncementVisibility(ANN_PAGE);
 }
 
-document.getElementById("btnGoImport").onclick = ()=>activate("import");
-document.getElementById("btnGoRoutes").onclick = ()=>activate("home");
-btnGoViolationList?.addEventListener("click", ()=>{
+/* ===== quick jump ===== */
+btnGoImport.onclick = ()=>activate("import");
+btnGoRoutes.onclick = ()=>activate("home");
+btnGoViolations.onclick = ()=>{
   activate("violation-list");
   setViolationPreset("today");
   runViolationSearch();
-});
-btnGoNotify?.addEventListener("click", ()=>activate("home"));
+};
 
-function updateViolationNoteUI(){
-  const isOther = vCreateType?.value === "其他";
-  if(vCreateNoteLabel){
-    vCreateNoteLabel.textContent = isOther ? "說明（必填）" : "說明（選「其他」時必填）";
-  }
-  if(vCreateNote){
-    vCreateNote.placeholder = isOther
-      ? "因為已選擇「其他」，此欄位必須填寫"
-      : "可輸入補充說明；若選擇「其他」則此欄必填";
-  }
-}
-vCreateType?.addEventListener("change", updateViolationNoteUI);
-updateViolationNoteUI();
-
+/* ===== state ===== */
 let ACTIVE_SEMESTER_ID = "";
+let ME = null;
 
+/* ===== 找學生 ===== */
+async function findStudentByKeyword(keyword){
+  const kw = String(keyword || "").trim();
+  if(!kw) return null;
+
+  let snap = await db.collection("users")
+    .where("studentId", "==", kw)
+    .limit(1)
+    .get();
+
+  if (!snap.empty) {
+    const doc = snap.docs[0];
+    const data = doc.data() || {};
+    if (data.roles?.student === true && data.enabled === true) {
+      return { uid: doc.id, data };
+    }
+  }
+
+  snap = await db.collection("users")
+    .where("classSeat", "==", kw)
+    .limit(1)
+    .get();
+
+  if (!snap.empty) {
+    const doc = snap.docs[0];
+    const data = doc.data() || {};
+    if (data.roles?.student === true && data.enabled === true) {
+      return { uid: doc.id, data };
+    }
+  }
+
+  return null;
+}
+
+/* ===== 附件上傳 ===== */
 async function uploadViolationFiles(files){
   const urls = [];
+
   for(const file of files){
     const safeName = `${Date.now()}_${Math.random().toString(36).slice(2)}_${file.name}`;
     const ref = storage.ref(`violations/${ACTIVE_SEMESTER_ID}/${safeName}`);
     await ref.put(file);
     const url = await ref.getDownloadURL();
+
     urls.push({
       name: file.name,
       url,
@@ -1059,10 +1186,22 @@ async function uploadViolationFiles(files){
       size: file.size || 0
     });
   }
+
   return urls;
 }
 
-btnCreateViolation?.addEventListener("click", async ()=>{
+/* ===== 違規登記 ===== */
+function updateViolationNoteUI(){
+  const isOther = vCreateType.value === "其他";
+  vCreateNoteLabel.textContent = isOther ? "說明（必填）" : "說明（選「其他」時必填）";
+  vCreateNote.placeholder = isOther
+    ? "因為已選擇「其他」，此欄位必須填寫"
+    : "可輸入補充說明；若選擇「其他」則此欄必填";
+}
+vCreateType.addEventListener("change", updateViolationNoteUI);
+updateViolationNoteUI();
+
+btnCreateViolation.addEventListener("click", async ()=>{
   vCreateOk.style.display = "none";
   vCreateErr.style.display = "none";
   vCreateOk.textContent = "";
@@ -1071,23 +1210,26 @@ btnCreateViolation?.addEventListener("click", async ()=>{
   const keyword = (vCreateKeyword.value || "").trim();
   const type = (vCreateType.value || "").trim();
   const note = (vCreateNote.value || "").trim();
-  const files = Array.from(vCreateFile?.files || []);
+  const files = Array.from(vCreateFile.files || []);
 
   if(!ACTIVE_SEMESTER_ID){
     vCreateErr.style.display = "";
     vCreateErr.textContent = "目前學期尚未設定，無法登記。";
     return;
   }
+
   if(!keyword){
     vCreateErr.style.display = "";
     vCreateErr.textContent = "請先輸入學號或班級座號。";
     return;
   }
+
   if(!type){
     vCreateErr.style.display = "";
     vCreateErr.textContent = "請先選擇違規類型。";
     return;
   }
+
   if(type === "其他" && !note){
     vCreateErr.style.display = "";
     vCreateErr.textContent = "當違規類型選擇「其他」時，說明欄位必須填寫。";
@@ -1098,25 +1240,45 @@ btnCreateViolation?.addEventListener("click", async ()=>{
   btnCreateViolation.textContent = "送出中…";
 
   try{
+    const student = await findStudentByKeyword(keyword);
+
+    if(!student){
+      vCreateErr.style.display = "";
+      vCreateErr.textContent = "查無此學生名單或該帳號未啟用，無法登記違規。";
+      return;
+    }
+
     const uploadedFiles = files.length ? await uploadViolationFiles(files) : [];
-    await db.collection("semesters").doc(ACTIVE_SEMESTER_ID).collection("violations").add({
-      keyword,
-      type,
-      note,
-      files: uploadedFiles,
-      status: "待審",
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      createdByUid: auth.currentUser?.uid || "",
-      createdByRole: activeRole || "",
-    });
+
+    await db.collection("semesters")
+      .doc(ACTIVE_SEMESTER_ID)
+      .collection("violations")
+      .add({
+        studentUid: student.uid,
+        studentId: student.data.studentId || "",
+        classSeat: student.data.classSeat || "",
+        studentName: student.data.name || "",
+        keyword,
+        type,
+        note,
+        files: uploadedFiles,
+        status: "待審",
+        reviewStatus: "pending",
+        reviewedAt: null,
+        reviewedByUid: "",
+        voidReason: "",
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        createdByUid: auth.currentUser?.uid || "",
+        createdByRole: activeRole || "",
+      });
 
     vCreateOk.style.display = "";
     vCreateOk.innerHTML =
       `✅ 已成功登記違規。<br>` +
-      `對象：${escapeHtml(keyword)}<br>` +
-      `類型：${escapeHtml(type)}` +
-      (note ? `<br>說明：${escapeHtml(note)}` : "") +
-      `<br>附件數：${uploadedFiles.length}`;
+      `學生：${escapeHtml(student.data.name || "—")}<br>` +
+      `學號：${escapeHtml(student.data.studentId || "—")}<br>` +
+      `違規類型：${escapeHtml(type)}<br>` +
+      `附件數：${uploadedFiles.length}`;
 
     vCreateKeyword.value = "";
     vCreateType.value = "";
@@ -1125,6 +1287,7 @@ btnCreateViolation?.addEventListener("click", async ()=>{
     updateViolationNoteUI();
 
     await loadViolationList();
+
   }catch(e){
     console.error(e);
     vCreateErr.style.display = "";
@@ -1135,20 +1298,55 @@ btnCreateViolation?.addEventListener("click", async ()=>{
   }
 });
 
-function yyyy_mm_dd(d){
-  const y = d.getFullYear();
-  const m = String(d.getMonth()+1).padStart(2,"0");
-  const day = String(d.getDate()).padStart(2,"0");
-  return `${y}-${m}-${day}`;
+/* ===== 審核 ===== */
+async function approveViolation(id){
+  if(!ACTIVE_SEMESTER_ID) return;
+
+  await db.collection("semesters")
+    .doc(ACTIVE_SEMESTER_ID)
+    .collection("violations")
+    .doc(id)
+    .update({
+      status:"已通過",
+      reviewStatus:"approved",
+      reviewedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      reviewedByUid: auth.currentUser?.uid || ""
+    });
+
+  await loadViolationList();
 }
-function startOfWeekMonday(d){
-  const x = new Date(d);
-  const day = x.getDay();
-  const diff = (day === 0 ? -6 : 1 - day);
-  x.setDate(x.getDate() + diff);
-  x.setHours(0,0,0,0);
-  return x;
+
+async function voidViolation(id){
+  if(!ACTIVE_SEMESTER_ID) return;
+
+  const reason = prompt("請輸入作廢 / 銷除原因：");
+  if(reason === null) return;
+
+  const r = String(reason || "").trim();
+  if(!r){
+    alert("作廢原因不可空白。");
+    return;
+  }
+
+  await db.collection("semesters")
+    .doc(ACTIVE_SEMESTER_ID)
+    .collection("violations")
+    .doc(id)
+    .update({
+      status:"已作廢",
+      reviewStatus:"void",
+      reviewedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      reviewedByUid: auth.currentUser?.uid || "",
+      voidReason: r
+    });
+
+  await loadViolationList();
 }
+
+window.approveViolation = approveViolation;
+window.voidViolation = voidViolation;
+
+/* ===== 違規紀錄 / 篩選 ===== */
 function setViolationPreset(preset){
   vFilter.value = preset;
   const now = new Date();
@@ -1170,6 +1368,7 @@ function setViolationPreset(preset){
   }
   updateAppliedText();
 }
+
 function updateAppliedText(extra){
   const f = vFilter.value;
   const from = vFrom.value || "—";
@@ -1182,8 +1381,6 @@ function updateAppliedText(extra){
   if(f==="custom") tag="自訂期間";
   vApplied.textContent = `目前套用篩選：${tag}｜期間：${from} ～ ${to}｜搜尋：${q}` + (extra?`｜${extra}`:"");
 }
-vFilter.addEventListener("change", ()=> setViolationPreset(vFilter.value));
-btnVSearch.addEventListener("click", ()=> runViolationSearch());
 
 function matchesDateFilter(data){
   if(vFilter.value === "pending"){
@@ -1198,11 +1395,13 @@ function matchesDateFilter(data){
   if(vFilter.value === "today"){
     return ymd === yyyy_mm_dd(new Date());
   }
+
   if(vFilter.value === "week"){
     const mon = yyyy_mm_dd(startOfWeekMonday(new Date()));
     const today = yyyy_mm_dd(new Date());
     return ymd >= mon && ymd <= today;
   }
+
   if(vFilter.value === "custom"){
     const from = vFrom.value || "";
     const to = vTo.value || "";
@@ -1210,18 +1409,24 @@ function matchesDateFilter(data){
     if(to && ymd > to) return false;
     return true;
   }
+
   return true;
 }
 
 function matchesKeywordFilter(data){
   const q = (vSearch.value || "").trim().toLowerCase();
   if(!q) return true;
+
   const hay = [
+    data.studentId || "",
+    data.classSeat || "",
+    data.studentName || "",
     data.keyword || "",
     data.type || "",
     data.note || "",
     data.status || ""
   ].join(" ").toLowerCase();
+
   return hay.includes(q);
 }
 
@@ -1234,22 +1439,81 @@ function renderViolationCards(items){
   vListBox.innerHTML = items.map(item=>{
     const d = item.data;
     const files = Array.isArray(d.files) ? d.files : [];
+    const status = d.status || "待審";
+    const statusClass = badgeClass(status);
+    const canReview = status === "待審";
+
     return `
       <div class="listCard">
-        <div class="title">${escapeHtml(d.keyword || "—")}｜${escapeHtml(d.type || "—")}</div>
-        <div class="sub">
-          狀態：${escapeHtml(d.status || "—")}<br>
-          說明：${escapeHtml(d.note || "—")}<br>
-          建立時間：${escapeHtml(fmtTs(d.createdAt))}
+        <div class="listHeader">
+          <div>
+            <div class="listTitle">${escapeHtml(d.studentName || d.keyword || "—")}｜${escapeHtml(d.type || "—")}</div>
+            <div class="listSub">
+              學號：${escapeHtml(d.studentId || "—")}<br>
+              班級座號：${escapeHtml(d.classSeat || "—")}<br>
+              狀態：<span class="pill ${statusClass}">${escapeHtml(status)}</span><br>
+              說明：${escapeHtml(d.note || "—")}<br>
+              建立時間：${escapeHtml(fmtTs(d.createdAt))}
+              ${d.voidReason ? `<br>作廢原因：${escapeHtml(d.voidReason)}` : ``}
+            </div>
+          </div>
         </div>
+
         ${files.length ? `
           <div class="fileRow">
-            ${files.map(f => `<a class="fileLink" href="${escapeHtml(f.url)}" target="_blank">${escapeHtml(f.name || "附件")}</a>`).join("")}
+            ${files.map(f=>`
+              <a class="fileLink" href="${escapeHtml(f.url)}" target="_blank">
+                附件：${escapeHtml(f.name || "附件")}
+              </a>
+            `).join("")}
           </div>
         ` : ``}
+
+        <div class="formRow" style="margin-top:10px;">
+          ${
+            canReview
+              ? `
+                <button class="miniBtn" onclick="approveViolation('${item.id}')">通過審核</button>
+                <button class="miniBtn" onclick="voidViolation('${item.id}')">作廢 / 銷除</button>
+              `
+              : `<span class="pill ${statusClass}">已完成審核</span>`
+          }
+        </div>
       </div>
     `;
   }).join("");
+}
+
+function renderViolationStats(allItems){
+  const total = allItems.length;
+  const pending = allItems.filter(x => (x.data.status || "") === "待審").length;
+  const approved = allItems.filter(x => (x.data.status || "") === "已通過").length;
+  const voided = allItems.filter(x => (x.data.status || "") === "已作廢").length;
+
+  statAll.textContent = total;
+  statPending.textContent = pending;
+  statApproved.textContent = approved;
+  statVoided.textContent = voided;
+
+  const todayCount = allItems.filter(x=>{
+    const ts = x.data.createdAt;
+    if(!ts) return false;
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    return yyyy_mm_dd(d) === yyyy_mm_dd(new Date());
+  }).length;
+
+  const weekCount = allItems.filter(x=>{
+    const ts = x.data.createdAt;
+    if(!ts) return false;
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    const ymd = yyyy_mm_dd(d);
+    const mon = yyyy_mm_dd(startOfWeekMonday(new Date()));
+    const today = yyyy_mm_dd(new Date());
+    return ymd >= mon && ymd <= today;
+  }).length;
+
+  rtVToday.textContent = `今日違規：${todayCount}`;
+  rtVWeek.textContent = `本週違規：${weekCount}｜待審：${pending}`;
 }
 
 async function loadViolationList(){
@@ -1259,14 +1523,17 @@ async function loadViolationList(){
   }
 
   try{
-    const snap = await db.collection("semesters").doc(ACTIVE_SEMESTER_ID)
+    const snap = await db.collection("semesters")
+      .doc(ACTIVE_SEMESTER_ID)
       .collection("violations")
       .orderBy("createdAt","desc")
-      .limit(100)
+      .limit(200)
       .get();
 
-    let items = snap.docs.map(doc => ({ id: doc.id, data: doc.data() }));
-    items = items.filter(item => matchesDateFilter(item.data) && matchesKeywordFilter(item.data));
+    const allItems = snap.docs.map(doc => ({ id:doc.id, data:doc.data() }));
+    renderViolationStats(allItems);
+
+    const items = allItems.filter(item => matchesDateFilter(item.data) && matchesKeywordFilter(item.data));
     renderViolationCards(items);
   }catch(e){
     console.error(e);
@@ -1280,7 +1547,10 @@ function runViolationSearch(){
   updateAppliedText(extra);
   loadViolationList();
 }
+vFilter.addEventListener("change", ()=> setViolationPreset(vFilter.value));
+btnVSearch.addEventListener("click", ()=> runViolationSearch());
 
+/* ===== render meta ===== */
 function renderImportStatus(doc){
   if(!doc){
     importStatus.innerHTML = "車表匯入狀況：尚未設定";
@@ -1307,30 +1577,18 @@ function renderMetaDashboard(doc){
   if(!doc){
     rtMode.textContent = "今日模式：未設定";
     rtRoutes.textContent = "第一梯次：—｜第二梯次：—｜接近滿載：—";
-    rtVToday.textContent = "今日違規：—";
-    rtVWeek.textContent = "本週違規：—｜待審：—";
     return;
   }
+
   rtMode.textContent = "今日模式：" + (doc.todayMode || "未設定");
 
   const b1 = doc?.routes?.batch1Total ?? 0;
   const b2 = doc?.routes?.batch2Total ?? 0;
   const nf = doc?.routes?.nearFullRoutes ?? 0;
   rtRoutes.textContent = `第一梯次：${b1}｜第二梯次：${b2}｜接近滿載：${nf}`;
-
-  const vt = doc?.violations?.todayCount ?? 0;
-  const vw = doc?.violations?.weekCount ?? 0;
-  const vp = doc?.violations?.pendingCount ?? 0;
-  rtVToday.textContent = `今日違規：${vt}`;
-  rtVWeek.textContent = `本週違規：${vw}｜待審：${vp}`;
 }
 
-function renderNotifications(doc){
-  const c = doc?.unreadCountForAdmin ?? 0;
-  nfAdmin.textContent = `行政未讀通知：${c}`;
-  nfNote.textContent = doc ? "已載入" : "尚未設定";
-}
-
+/* ===== main flow ===== */
 auth.onAuthStateChanged(async (user)=>{
   overlay.style.display = "flex";
   overlay.classList.remove("hide");
@@ -1348,73 +1606,53 @@ auth.onAuthStateChanged(async (user)=>{
     const now = new Date();
     stTime.textContent = "系統時間：" + now.toLocaleString("zh-TW", { hour12:false });
 
-    let u = null;
-    try{
-      const uDoc = await withTimeout(db.collection("users").doc(user.uid).get(), 9000, "users/uid");
-      u = uDoc.exists ? uDoc.data() : null;
-    }catch(e){
-      console.warn("[users] read failed:", e);
-      u = null;
-    }
+    const uDoc = await withTimeout(db.collection("users").doc(user.uid).get(), 9000, "users/uid");
+    ME = uDoc.exists ? uDoc.data() : null;
 
-    if(!u || u.enabled !== true){
+    if(!ME || ME.enabled !== true){
       await auth.signOut();
       window.location.href = "index.html";
       return;
     }
 
-    userLine1.textContent = `${u.title || "未設定職稱"}｜${u.name || (user.email || "")}`;
+    userLine1.textContent = `${ME.title || "未設定職稱"}｜${ME.name || (user.email || "")}`;
     userLine2.textContent = user.email || "";
     stAuth.textContent = "狀態：已開通";
 
-    if(navAnn)   navAnn.style.display   = hasPerm(u, "admin.editAnnouncements") ? "" : "none";
-    if(navUsers) navUsers.style.display = hasPerm(u, "admin.manageUsers") ? "" : "none";
-    if(navPerms) navPerms.style.display = hasPerm(u, "admin.managePermissions") ? "" : "none";
+    if(navAnn) navAnn.style.display = hasPerm(ME, "admin.editAnnouncements") ? "" : "none";
+    if(navUsers) navUsers.style.display = hasPerm(ME, "admin.manageUsers") ? "" : "none";
+    if(navPerms) navPerms.style.display = hasPerm(ME, "admin.managePermissions") ? "" : "none";
 
-    try{
-      const settingsDoc = await withTimeout(db.collection("settings").doc("global").get(), 9000, "settings/global");
-      ACTIVE_SEMESTER_ID = String(settingsDoc.get("active_semester_id") || "");
-    }catch(e){
-      console.warn("[settings/global] read failed:", e);
-      ACTIVE_SEMESTER_ID = "";
-    }
+    const settingsDoc = await withTimeout(db.collection("settings").doc("global").get(), 9000, "settings/global");
+    ACTIVE_SEMESTER_ID = String(settingsDoc.get("active_semester_id") || "");
 
     semesterHint.textContent = "學期：" + (ACTIVE_SEMESTER_ID || "未設定");
     stSemester.textContent = "目前學期：" + (ACTIVE_SEMESTER_ID || "未設定");
 
-    homeStatus.textContent = "已登入，可開始操作。";
-    homeNotice.textContent = "";
-
     if(!ACTIVE_SEMESTER_ID){
-      renderAnnouncement(null);
       await finishAndEnter();
       return;
     }
 
     const metaRef = db.collection("semesters").doc(ACTIVE_SEMESTER_ID).collection("meta");
-
-    const [dashSnap, importSnap, annSnap, notiSnap] = await Promise.all([
-      withTimeout(metaRef.doc("dashboard").get(), 9000, "meta/dashboard").catch(e=>{ console.warn("[meta/dashboard] failed:", e); return null; }),
-      withTimeout(metaRef.doc("importStatus").get(), 9000, "meta/importStatus").catch(e=>{ console.warn("[meta/importStatus] failed:", e); return null; }),
-      withTimeout(metaRef.doc("announcement").get(), 9000, "meta/announcement").catch(e=>{ console.warn("[meta/announcement] failed:", e); return null; }),
-      withTimeout(metaRef.doc("notifications").get(), 9000, "meta/notifications").catch(e=>{ console.warn("[meta/notifications] failed:", e); return null; }),
+    const [dashSnap, importSnap, annSnap] = await Promise.all([
+      withTimeout(metaRef.doc("dashboard").get(), 9000, "meta/dashboard").catch(()=>null),
+      withTimeout(metaRef.doc("importStatus").get(), 9000, "meta/importStatus").catch(()=>null),
+      withTimeout(metaRef.doc("announcement").get(), 9000, "meta/announcement").catch(()=>null),
     ]);
 
     const dash = dashSnap && dashSnap.exists ? dashSnap.data() : null;
     const imp  = importSnap && importSnap.exists ? importSnap.data() : null;
     const ann  = annSnap && annSnap.exists ? annSnap.data() : null;
-    const noti = notiSnap && notiSnap.exists ? notiSnap.data() : null;
 
     renderMetaDashboard(dash);
     renderImportStatus(imp);
     renderAnnouncement(ann);
-    renderNotifications(noti);
 
-    updateAnnouncementVisibility("home");
     await loadViolationList();
     await finishAndEnter();
 
-  } catch(err){
+  }catch(err){
     console.error("[dashboard fatal]", err);
     stopProgress();
     app.style.display = "grid";
@@ -1423,16 +1661,16 @@ auth.onAuthStateChanged(async (user)=>{
   }
 });
 
+/* hash jump */
 (function initFromHash(){
   const h = location.hash || "";
   if(h.includes("violation-create")){
     activate("violation-create");
   }else if(h.includes("violation-list")){
     activate("violation-list");
-    if(h.includes("filter=today")) { setViolationPreset("today"); runViolationSearch(); }
-    else if(h.includes("filter=week")) { setViolationPreset("week"); runViolationSearch(); }
-    else if(h.includes("filter=pending")) { setViolationPreset("pending"); runViolationSearch(); }
-    else { runViolationSearch(); }
+    if(h.includes("filter=today")) { setViolationPreset("today"); }
+    else if(h.includes("filter=week")) { setViolationPreset("week"); }
+    else if(h.includes("filter=pending")) { setViolationPreset("pending"); }
   }else{
     updateAnnouncementVisibility("home");
   }
