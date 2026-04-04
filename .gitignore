@@ -1,0 +1,7 @@
+node_modules
+functions/node_modules
+
+firebase-debug.log
+.DS_Store
+
+serviceAccount.json

@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>選擇身份</title>
+
+<style>
+:root{
+  --primary:#0088FF;
+  --primary-dark:#0077E6;
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans TC",sans-serif;
+}
+
+body{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(180deg,#eef2f7,#e5eaf2);
+  padding:20px;
+}
+
+.card{
+  width:min(440px,100%);
+  background:#fff;
+  border-radius:22px;
+  padding:28px 24px;
+  box-shadow:0 20px 40px rgba(0,0,0,.08);
+}
+
+.logoWrap{
+  text-align:center;
+  margin-bottom:18px;
+}
+.logoWrap img{
+  width:66px;
+  margin-bottom:10px;
+}
+.logoWrap h1{
+  font-size:24px;
+  color:#1f2937;
+}
+.logoWrap p{
+  margin-top:6px;
+  letter-spacing:4px;
+  font-size:12px;
+  color:#6b7280;
+}
+
+.title{
+  font-size:20px;
+  font-weight:800;
+  color:#111827;
+  text-align:center;
+}
+.sub{
+  margin-top:8px;
+  font-size:13px;
+  color:#6b7280;
+  text-align:center;
+  line-height:1.7;
+}
+
+.list{
+  margin-top:22px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.roleBtn{
+  width:100%;
+  padding:14px 16px;
+  border:none;
+  border-radius:16px;
+  background:#0088FF;
+  color:white;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+  transition:.2s ease;
+}
+.roleBtn:hover{
+  background:#0077E6;
+}
+
+.secondaryBtn{
+  width:100%;
+  margin-top:12px;
+  padding:12px 14px;
+  border:none;
+  border-radius:14px;
+  background:#f3f4f6;
+  color:#374151;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+}
+.secondaryBtn:hover{
+  background:#e5e7eb;
+}
+
+.msg{
+  margin-top:14px;
+  text-align:center;
+  font-size:13px;
+  color:#ef4444;
+  line-height:1.6;
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logoWrap">
+    <img src="./schoolbadge.gif" alt="校徽">
+    <h1>校專車路隊長管理系統</h1>
+    <p>TEAMLEADER SYSTEM</p>
+  </div>
+
+  <div class="title">選擇登入身份</div>
+  <div class="sub">此帳號具有多個身份，請選擇本次要進入的系統頁面</div>
+
+  <div class="list" id="roleList"></div>
+
+  <button class="secondaryBtn" id="btnBack">返回登入頁</button>
+
+  <div class="msg" id="msg"></div>
+</div>
+
+<script>
+const roleMap = {
+  superAdmin: "超級管理員",
+  admin: "行政",
+  staff: "車長幹部",
+  busLeader: "車長",
+  student: "學生"
+};
+
+function redirectByRole(role){
+  sessionStorage.setItem("activeRole", role);
+
+  if(["superAdmin","admin","staff","busLeader"].includes(role)){
+    location.href = "dashboard.html";
+    return;
+  }
+  if(role === "student"){
+    location.href = "student.html";
+    return;
+  }
+
+  document.getElementById("msg").textContent = "無法辨識身份";
+}
+
+const roleListEl = document.getElementById("roleList");
+const msg = document.getElementById("msg");
+
+document.getElementById("btnBack").onclick = ()=>{
+  sessionStorage.removeItem("roleOptions");
+  sessionStorage.removeItem("activeRole");
+  location.href = "index.html";
+};
+
+try{
+  const roles = JSON.parse(sessionStorage.getItem("roleOptions") || "[]");
+
+  if(!Array.isArray(roles) || roles.length === 0){
+    msg.textContent = "沒有可選擇的身份，請重新登入";
+  }else{
+    roles.forEach(role=>{
+      const btn = document.createElement("button");
+      btn.className = "roleBtn";
+      btn.textContent = roleMap[role] || role;
+      btn.onclick = ()=> redirectByRole(role);
+      roleListEl.appendChild(btn);
+    });
+  }
+}catch(e){
+  console.error(e);
+  msg.textContent = "身份資料讀取失敗，請重新登入";
+}
+</script>
+
+</body>
+</html>

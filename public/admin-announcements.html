@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>公告管理｜校專車路隊長管理系統</title>
+
+<style>
+:root{
+  --primary:#0088FF;
+  --primary-dark:#0077E6;
+  --bg1:#eef2f7;
+  --bg2:#e5eaf2;
+  --text:#111827;
+  --muted:#6b7280;
+  --border:#eef2f7;
+}
+*{ box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans TC",sans-serif; }
+body{ background:linear-gradient(180deg,var(--bg1),var(--bg2)); min-height:100vh; color:var(--text); }
+a{ color:inherit; text-decoration:none; }
+
+.wrap{
+  width:min(900px, calc(100% - 20px));
+  margin:18px auto 26px;
+  background:#fff;
+  border-radius:18px;
+  box-shadow:0 20px 40px rgba(0,0,0,0.08);
+  border:1px solid var(--border);
+  overflow:hidden;
+}
+.top{
+  padding:16px 16px 14px;
+  border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;gap:10px;align-items:flex-start;
+}
+h1{ font-size:18px; }
+.sub{ font-size:12px;color:var(--muted);margin-top:6px;line-height:1.6; }
+.btn{
+  padding:10px 12px;border-radius:14px;border:none;background:var(--primary);color:#fff;
+  font-weight:900;cursor:pointer;
+}
+.btn:hover{ background:var(--primary-dark); }
+
+.main{ padding:16px; }
+.card{
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:16px;
+}
+.row{ display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; align-items:flex-end; }
+.field{ display:flex; flex-direction:column; gap:6px; min-width:160px; }
+label{ font-size:12px;color:var(--muted); }
+input[type="text"], textarea, select{
+  padding:10px 12px;border-radius:14px;border:1px solid var(--border);background:#f9fafb;font-size:13px;
+}
+textarea{ min-height:90px; resize:vertical; }
+input:focus, textarea:focus, select:focus{ outline:none; border-color:#cfe3ff;background:#fff; }
+
+.pill{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 10px;border:1px solid var(--border);border-radius:999px;background:#f9fafb;
+  font-size:12px;color:var(--muted);
+}
+.small{ font-size:12px; color:var(--muted); line-height:1.7; margin-top:10px; }
+.preview{
+  margin-top:12px;
+  border:1px dashed var(--border);
+  border-radius:16px;
+  background:#f9fafb;
+  padding:12px 14px;
+}
+.previewTag{
+  display:inline-flex;align-items:center;
+  padding:6px 10px;border-radius:999px;
+  background:rgba(0,136,255,.12);color:var(--primary);
+  font-weight:900;font-size:12px;
+}
+.previewText{ margin-top:10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.actions{ display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; }
+.btn2{
+  padding:10px 12px;border-radius:14px;border:1px solid var(--border);background:#fff;
+  cursor:pointer;font-weight:900;color:var(--primary);
+}
+.btn2:hover{ border-color:#dbe5f5;background:#f9fafb; }
+.msg{ margin-top:12px; font-size:12px; color:var(--muted); }
+.err{ color:#ef4444; }
+.ok{ color:#16a34a; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="top">
+    <div>
+      <h1>公告管理</h1>
+      <div class="sub">設定「跑馬燈公告」文字、樣式與顯示頁面。只有被派發權限的人可進入。</div>
+    </div>
+    <button class="btn" id="btnBack">回 Dashboard</button>
+  </div>
+
+  <div class="main">
+    <div class="card">
+      <div class="pill" id="pillSem">學期：讀取中…</div>
+      <div class="pill" id="pillAuth" style="margin-left:8px;">權限：檢查中…</div>
+
+      <div class="row">
+        <div class="field" style="min-width:220px;flex:1;">
+          <label>公告文字</label>
+          <textarea id="aText" placeholder="輸入公告內容（跑馬燈會自動捲動）"></textarea>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label>啟用公告</label>
+          <select id="aEnabled">
+            <option value="false">關閉</option>
+            <option value="true">開啟</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>文字顏色</label>
+          <input id="aColor" type="text" value="#111827" placeholder="#111827">
+        </div>
+
+        <div class="field">
+          <label>粗體</label>
+          <select id="aBold">
+            <option value="false">否</option>
+            <option value="true">是</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>斜體</label>
+          <select id="aItalic">
+            <option value="false">否</option>
+            <option value="true">是</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>底線</label>
+          <select id="aUnderline">
+            <option value="false">否</option>
+            <option value="true">是</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label>顯示頁面</label>
+          <select id="aPagesPreset">
+            <option value="custom">自訂</option>
+            <option value="onlyHome">只顯示總覽</option>
+            <option value="allPages">全部頁面</option>
+          </select>
+        </div>
+
+        <div class="field" style="min-width:420px;flex:1;">
+          <label>頁面開關（home / import / violation / query / audit / settings）</label>
+          <input id="aPages" type="text" placeholder='例如：home=true,import=false,violation=false,query=false,audit=false,settings=false'>
+        </div>
+      </div>
+
+      <div class="preview">
+        <div class="previewTag">預覽</div>
+        <div class="previewText" id="previewText">（尚未輸入）</div>
+        <div class="small">提示：Dashboard 的「總覽」會額外顯示公告欄位；其他頁只有設定為 true 才顯示跑馬燈。</div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="btnSave">儲存公告</button>
+        <button class="btn2" id="btnReload">重新載入</button>
+      </div>
+
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAXgHiQ-Kh6cv4kkOFuHVCUOwD-C1HoUQI",
+  authDomain: "teamleader-system.firebaseapp.com",
+  projectId: "teamleader-system",
+};
+if (!firebase.apps || !firebase.apps.length) firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+const pillSem = document.getElementById("pillSem");
+const pillAuth = document.getElementById("pillAuth");
+const msg = document.getElementById("msg");
+
+const aText = document.getElementById("aText");
+const aEnabled = document.getElementById("aEnabled");
+const aColor = document.getElementById("aColor");
+const aBold = document.getElementById("aBold");
+const aItalic = document.getElementById("aItalic");
+const aUnderline = document.getElementById("aUnderline");
+const aPagesPreset = document.getElementById("aPagesPreset");
+const aPages = document.getElementById("aPages");
+const previewText = document.getElementById("previewText");
+
+document.getElementById("btnBack").onclick = ()=>location.href="dashboard.html";
+document.getElementById("btnReload").onclick = ()=>loadAll();
+
+function boolVal(x){ return String(x)==="true"; }
+function setMsg(t, ok){
+  msg.className = "msg " + (ok ? "ok" : "err");
+  msg.textContent = t;
+}
+function applyPreview(){
+  const txt = (aText.value||"").trim();
+  previewText.textContent = txt ? txt : "（尚未輸入）";
+  previewText.style.color = aColor.value || "#111827";
+  previewText.style.fontWeight = boolVal(aBold.value) ? "900" : "";
+  previewText.style.fontStyle = boolVal(aItalic.value) ? "italic" : "";
+  previewText.style.textDecoration = boolVal(aUnderline.value) ? "underline" : "";
+}
+[aText,aEnabled,aColor,aBold,aItalic,aUnderline,aPagesPreset,aPages].forEach(el=>{
+  el.addEventListener("input", applyPreview);
+  el.addEventListener("change", ()=>{
+    if(el===aPagesPreset){
+      if(aPagesPreset.value==="onlyHome"){
+        aPages.value = "home=true,import=false,violation=false,query=false,audit=false,settings=false";
+      }else if(aPagesPreset.value==="allPages"){
+        aPages.value = "home=true,import=true,violation=true,query=true,audit=true,settings=true";
+      }
+    }
+    applyPreview();
+  });
+});
+
+function parsePages(str){
+  const base = { home:true, import:false, violation:false, query:false, audit:false, settings:false };
+  const s = String(str||"").trim();
+  if(!s) return base;
+  const parts = s.split(",").map(x=>x.trim()).filter(Boolean);
+  for(const p of parts){
+    const [k,v] = p.split("=").map(x=>x.trim());
+    if(!k) continue;
+    if(base.hasOwnProperty(k)) base[k] = (String(v).toLowerCase()==="true");
+  }
+  return base;
+}
+
+async function getSemesterId(){
+  const sDoc = await db.collection("settings").doc("global").get();
+  return String(sDoc.get("active_semester_id") || "");
+}
+async function getMyUser(uid){
+  const uDoc = await db.collection("users").doc(uid).get();
+  return uDoc.exists ? uDoc.data() : null;
+}
+function hasPerm(u, key){
+  return u?.roles?.superAdmin === true || u?.permissions?.[key] === true;
+}
+
+let semesterId = "";
+let me = null;
+
+async function loadAll(){
+  setMsg("", true);
+  try{
+    semesterId = await getSemesterId();
+    pillSem.textContent = "學期：" + (semesterId || "未設定");
+    if(!semesterId) throw new Error("尚未設定學期（settings/global.active_semester_id）");
+
+    const ref = db.collection("semesters").doc(semesterId).collection("meta").doc("announcement");
+    const doc = await ref.get();
+    const a = doc.exists ? doc.data() : null;
+
+    // default
+    aText.value = a?.text || "";
+    aEnabled.value = String(!!a?.enabled);
+    aColor.value = a?.style?.color || "#111827";
+    aBold.value = String(!!a?.style?.bold);
+    aItalic.value = String(!!a?.style?.italic);
+    aUnderline.value = String(!!a?.style?.underline);
+
+    const pages = a?.pages || { home:true, import:false, violation:false, query:false, audit:false, settings:false };
+    aPages.value = `home=${!!pages.home},import=${!!pages.import},violation=${!!pages.violation},query=${!!pages.query},audit=${!!pages.audit},settings=${!!pages.settings}`;
+    aPagesPreset.value = "custom";
+
+    applyPreview();
+    setMsg("已載入公告設定。", true);
+  }catch(e){
+    console.error(e);
+    setMsg("載入失敗：" + (e.message || String(e)), false);
+  }
+}
+
+document.getElementById("btnSave").onclick = async ()=>{
+  setMsg("", true);
+  try{
+    if(!semesterId) semesterId = await getSemesterId();
+    if(!semesterId) throw new Error("尚未設定學期");
+
+    const ref = db.collection("semesters").doc(semesterId).collection("meta").doc("announcement");
+
+    await ref.set({
+      enabled: boolVal(aEnabled.value),
+      text: String(aText.value||"").trim(),
+      style: {
+        color: String(aColor.value||"#111827"),
+        bold: boolVal(aBold.value),
+        italic: boolVal(aItalic.value),
+        underline: boolVal(aUnderline.value),
+      },
+      pages: parsePages(aPages.value),
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    }, { merge:true });
+
+    setMsg("✅ 已儲存公告。回 Dashboard 會立刻生效。", true);
+  }catch(e){
+    console.error(e);
+    setMsg("儲存失敗：" + (e.message || String(e)), false);
+  }
+};
+
+auth.onAuthStateChanged(async (user)=>{
+  if(!user){ location.href="index.html"; return; }
+  me = await getMyUser(user.uid);
+  if(!me || me.enabled !== true){ await auth.signOut(); location.href="index.html"; return; }
+
+  if(hasPerm(me, "admin.editAnnouncements")){
+    pillAuth.textContent = "權限：可管理公告";
+    pillAuth.style.color = "#16a34a";
+    await loadAll();
+  }else{
+    pillAuth.textContent = "權限：不足（無法管理公告）";
+    pillAuth.style.color = "#ef4444";
+    setMsg("你沒有公告管理權限（admin.editAnnouncements）。", false);
+  }
+});
+</script>
+</body>
+</html>

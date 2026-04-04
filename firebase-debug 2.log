@@ -1,0 +1,22 @@
+[debug] [2026-03-30T00:48:08.452Z] ----------------------------------------------------------------------
+[debug] [2026-03-30T00:48:08.458Z] Command:       /opt/homebrew/Cellar/node/25.6.1/bin/node /opt/homebrew/bin/firebase deploy --only hosting
+[debug] [2026-03-30T00:48:08.458Z] CLI Version:   15.7.0
+[debug] [2026-03-30T00:48:08.458Z] Platform:      darwin
+[debug] [2026-03-30T00:48:08.458Z] Node Version:  v25.6.1
+[debug] [2026-03-30T00:48:08.458Z] Time:          Mon Mar 30 2026 08:48:08 GMT+0800 (Taiwan Standard Time)
+[debug] [2026-03-30T00:48:08.458Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-03-30T00:48:08.459Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2026-03-30T00:48:10.404Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-03-30T00:48:10.404Z] > authorizing via signed-in user (zxc6229010@gmail.com)
+[debug] [2026-03-30T00:48:10.404Z] [iam] checking project teamleader-system for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2026-03-30T00:48:10.405Z] Checked if tokens are valid: false, expires at: 1774169201785
+[debug] [2026-03-30T00:48:10.405Z] Checked if tokens are valid: false, expires at: 1774169201785
+[debug] [2026-03-30T00:48:10.405Z] > refreshing access token with scopes: []
+[debug] [2026-03-30T00:48:10.406Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2026-03-30T00:48:10.406Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-03-30T00:48:10.490Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2026-03-30T00:48:10.490Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-03-30T00:48:10.501Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/teamleader-system:testIamPermissions [none]
+[debug] [2026-03-30T00:48:10.501Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/teamleader-system:testIamPermissions  x-goog-user-project=teamleader-system
+[debug] [2026-03-30T00:48:10.501Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/teamleader-system:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}

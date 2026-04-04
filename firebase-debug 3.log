@@ -1,0 +1,34 @@
+[debug] [2026-03-30T00:48:16.385Z] ----------------------------------------------------------------------
+[debug] [2026-03-30T00:48:16.387Z] Command:       /opt/homebrew/Cellar/node/25.6.1/bin/node /opt/homebrew/bin/firebase deploy --only functions
+[debug] [2026-03-30T00:48:16.387Z] CLI Version:   15.7.0
+[debug] [2026-03-30T00:48:16.387Z] Platform:      darwin
+[debug] [2026-03-30T00:48:16.387Z] Node Version:  v25.6.1
+[debug] [2026-03-30T00:48:16.387Z] Time:          Mon Mar 30 2026 08:48:16 GMT+0800 (Taiwan Standard Time)
+[debug] [2026-03-30T00:48:16.387Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-03-30T00:48:16.388Z] >>> [apiv2][query] GET https://firebase-public.firebaseio.com/cli.json [none]
+[debug] [2026-03-30T00:48:17.169Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-03-30T00:48:17.169Z] > authorizing via signed-in user (zxc6229010@gmail.com)
+[debug] [2026-03-30T00:48:17.170Z] [iam] checking project teamleader-system for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2026-03-30T00:48:17.170Z] Checked if tokens are valid: true, expires at: 1774835289490
+[debug] [2026-03-30T00:48:17.170Z] Checked if tokens are valid: true, expires at: 1774835289490
+[debug] [2026-03-30T00:48:17.170Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/teamleader-system:testIamPermissions [none]
+[debug] [2026-03-30T00:48:17.170Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/teamleader-system:testIamPermissions  x-goog-user-project=teamleader-system
+[debug] [2026-03-30T00:48:17.170Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/teamleader-system:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2026-03-30T00:48:17.567Z] <<< [apiv2][status] GET https://firebase-public.firebaseio.com/cli.json 200
+[debug] [2026-03-30T00:48:17.568Z] <<< [apiv2][body] GET https://firebase-public.firebaseio.com/cli.json {"cloudBuildErrorAfter":1594252800000,"cloudBuildWarnAfter":1590019200000,"defaultNode10After":1594252800000,"minVersion":"3.0.5","node8DeploysDisabledAfter":1613390400000,"node8RuntimeDisabledAfter":1615809600000,"node8WarnAfter":1600128000000}
+[debug] [2026-03-30T00:48:18.001Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/teamleader-system:testIamPermissions 200
+[debug] [2026-03-30T00:48:18.001Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/teamleader-system:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2026-03-30T00:48:18.001Z] Checked if tokens are valid: true, expires at: 1774835289490
+[debug] [2026-03-30T00:48:18.001Z] Checked if tokens are valid: true, expires at: 1774835289490
+[debug] [2026-03-30T00:48:18.001Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/teamleader-system/serviceAccounts/teamleader-system@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2026-03-30T00:48:18.002Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/teamleader-system/serviceAccounts/teamleader-system@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2026-03-30T00:48:19.126Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/teamleader-system/serviceAccounts/teamleader-system@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2026-03-30T00:48:19.126Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/teamleader-system/serviceAccounts/teamleader-system@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[info] 
+[info] === Deploying to 'teamleader-system'...
+[info] 
+[info] i  deploying functions 
+[debug] [2026-03-30T00:48:19.131Z] Checked if tokens are valid: true, expires at: 1774835289490
+[debug] [2026-03-30T00:48:19.131Z] Checked if tokens are valid: true, expires at: 1774835289490
+[debug] [2026-03-30T00:48:19.131Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/teamleader-system [none]
