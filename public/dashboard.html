@@ -14,12 +14,13 @@
   --text:#111827;
   --muted:#6b7280;
   --border:#eef2f7;
+  --danger:#ef4444;
+  --success:#16a34a;
 }
 *{ box-sizing:border-box; margin:0; padding:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans TC",sans-serif; }
 body{ background:linear-gradient(180deg,var(--bg1),var(--bg2)); min-height:100vh; color:var(--text); }
 a{ color:inherit; text-decoration:none; }
 
-/* ===== Layout ===== */
 .app{
   width:min(1200px, calc(100% - 32px));
   margin:22px auto 26px;
@@ -32,7 +33,6 @@ a{ color:inherit; text-decoration:none; }
   .app{ grid-template-columns: 1fr; width:calc(100% - 20px); margin:14px auto 18px; }
 }
 
-/* ===== Sidebar ===== */
 .sidebar{
   background:white;
   border-radius:18px;
@@ -87,7 +87,6 @@ a{ color:inherit; text-decoration:none; }
 }
 .logout:hover{ background:var(--primary-dark); }
 
-/* ===== Main ===== */
 .main{
   background:white;
   border-radius:18px;
@@ -134,7 +133,6 @@ a{ color:inherit; text-decoration:none; }
 .userinfo b{ font-size:13px; color:var(--text); }
 .userinfo span{ font-size:12px; color:var(--muted); }
 
-/* Sections */
 .section{ display:none; animation: fadeUp .22s ease; }
 .section.active{ display:block; }
 @keyframes fadeUp{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:translateY(0); } }
@@ -152,7 +150,6 @@ a{ color:inherit; text-decoration:none; }
 .card p{ font-size:12px; color:var(--muted); line-height:1.7; }
 .notice{ margin-top:10px; font-size:12px; color:var(--muted); line-height:1.6; }
 
-/* ===== Loading overlay ===== */
 .overlay{
   position:fixed;
   inset:0;
@@ -256,7 +253,6 @@ a{ color:inherit; text-decoration:none; }
 .w60{ width:60%; } .w68{ width:68%; } .w70{ width:70%; } .w72{ width:72%; }
 .w85{ width:85%; } .w90{ width:90%; } .w92{ width:92%; }
 
-/* ===== Mobile drawer behavior ===== */
 .drawerBackdrop{
   display:none;
   position:fixed;
@@ -282,7 +278,6 @@ a{ color:inherit; text-decoration:none; }
   .drawerBackdrop.show{ display:block; }
 }
 
-/* helpers */
 .row{
   display:flex; align-items:center; justify-content:space-between;
   gap:10px; padding:10px 0;
@@ -368,8 +363,41 @@ a{ color:inherit; text-decoration:none; }
   color:#991b1b;
   line-height:1.7;
 }
+.listCard{
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:12px;
+  background:#fff;
+  margin-top:10px;
+}
+.listCard .title{
+  font-size:14px;
+  font-weight:800;
+  color:#111827;
+}
+.listCard .sub{
+  margin-top:6px;
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.7;
+}
+.fileRow{
+  margin-top:6px;
+  font-size:12px;
+  color:#374151;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.fileLink{
+  display:inline-flex;
+  align-items:center;
+  padding:4px 8px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:#f9fafb;
+}
 
-/* ===== Announcement Marquee ===== */
 .announceWrap{
   display:none;
   margin:0 0 12px;
@@ -412,7 +440,6 @@ a{ color:inherit; text-decoration:none; }
 
 <body>
 
-<!-- Loading Overlay -->
 <div class="overlay" id="overlay" aria-hidden="false">
   <div class="loadPanel">
     <div class="loadTopBar">
@@ -449,7 +476,6 @@ a{ color:inherit; text-decoration:none; }
 <div class="drawerBackdrop" id="drawerBackdrop"></div>
 
 <div class="app" id="app" style="display:none;">
-  <!-- Sidebar -->
   <aside class="sidebar" id="sidebar">
     <div class="brand">
       <img src="./schoolbadge.gif" alt="校徽">
@@ -548,7 +574,6 @@ a{ color:inherit; text-decoration:none; }
     </div>
   </aside>
 
-  <!-- Main -->
   <main class="main">
     <div class="topbar">
       <div class="leftTop">
@@ -576,7 +601,6 @@ a{ color:inherit; text-decoration:none; }
       </div>
     </div>
 
-    <!-- 公告跑馬燈 -->
     <div class="announceWrap" id="announceWrap">
       <div class="announceInner">
         <div class="announceIcon">!</div>
@@ -589,7 +613,6 @@ a{ color:inherit; text-decoration:none; }
       </div>
     </div>
 
-    <!-- ====== HOME ====== -->
     <section class="section active" id="sec-home">
       <div class="grid">
         <div class="card">
@@ -650,7 +673,6 @@ a{ color:inherit; text-decoration:none; }
       </div>
     </section>
 
-    <!-- ====== IMPORT ====== -->
     <section class="section" id="sec-import">
       <div class="card">
         <h3>匯入中心</h3>
@@ -659,7 +681,6 @@ a{ color:inherit; text-decoration:none; }
       </div>
     </section>
 
-    <!-- ====== VIOLATION CREATE ====== -->
     <section class="section" id="sec-violation-create">
       <div class="card">
         <h3>違規登記</h3>
@@ -674,10 +695,11 @@ a{ color:inherit; text-decoration:none; }
           <div class="field">
             <label>違規類型</label>
             <select id="vCreateType">
-              <option value="未排隊">未排隊</option>
-              <option value="喧嘩">喧嘩</option>
-              <option value="遲到">遲到</option>
-              <option value="未依規定候車">未依規定候車</option>
+              <option value="">請選擇</option>
+              <option value="未排路隊">未排路隊</option>
+              <option value="未帶車證">未帶車證</option>
+              <option value="提早上車">提早上車</option>
+              <option value="未依規定路線搭乘校專車">未依規定路線搭乘校專車</option>
               <option value="其他">其他</option>
             </select>
           </div>
@@ -685,8 +707,15 @@ a{ color:inherit; text-decoration:none; }
 
         <div class="formRow">
           <div class="field" style="min-width:100%;flex:1;">
-            <label>備註</label>
-            <textarea id="vCreateNote" placeholder="可輸入補充說明（可留空）"></textarea>
+            <label id="vCreateNoteLabel">說明（選「其他」時必填）</label>
+            <textarea id="vCreateNote" placeholder="可輸入補充說明；若選擇「其他」則此欄必填"></textarea>
+          </div>
+        </div>
+
+        <div class="formRow">
+          <div class="field" style="min-width:100%;flex:1;">
+            <label>上傳附件（可選）</label>
+            <input id="vCreateFile" type="file" multiple>
           </div>
         </div>
 
@@ -694,8 +723,9 @@ a{ color:inherit; text-decoration:none; }
           <button class="primaryBtn" id="btnCreateViolation">送出登記</button>
         </div>
 
-        <div class="mutedBox" id="vCreateHint">
-          目前先完成頁面骨架。下一步可接 Firestore：依學號/班座找學生，寫入 semesters/{semesterId}/violations。
+        <div class="mutedBox">
+          這版已加入前端驗證與附件欄位。<br>
+          若要真的上傳附件，請先確認 Firebase Storage 已啟用，且 Storage Rules 允許已登入使用者寫入。
         </div>
 
         <div class="successBox" id="vCreateOk" style="display:none;"></div>
@@ -703,11 +733,10 @@ a{ color:inherit; text-decoration:none; }
       </div>
     </section>
 
-    <!-- ====== VIOLATION LIST ====== -->
     <section class="section" id="sec-violation-list">
       <div class="card">
         <h3>違規紀錄</h3>
-        <p>查詢、篩選與後續管理違規紀錄。</p>
+        <p>查詢、篩選與顯示違規紀錄。</p>
 
         <div class="formRow">
           <div class="field">
@@ -732,7 +761,7 @@ a{ color:inherit; text-decoration:none; }
           </div>
 
           <div class="field" style="min-width:240px;flex:1;">
-            <label>搜尋（學號 / 班座 / 姓名 / 關鍵字）</label>
+            <label>搜尋（學號 / 關鍵字）</label>
             <input id="vSearch" type="text" placeholder="輸入後按搜尋" />
           </div>
 
@@ -740,15 +769,10 @@ a{ color:inherit; text-decoration:none; }
         </div>
 
         <div class="mutedBox" id="vApplied">目前套用篩選：—（尚未查詢）</div>
-
-        <div class="mutedBox" id="vList">
-          這裡將顯示違規清單（下一步接 Firestore：semesters/{semesterId}/violations）。<br>
-          功能規劃：審核 / 銷除（必填原因）/ 轉送行政 / 超級管理員可控管權限 / 所有資料不可刪除（只有超管可 delete）。
-        </div>
+        <div id="vListBox" style="margin-top:12px;"></div>
       </div>
     </section>
 
-    <!-- ====== QUERY ====== -->
     <section class="section" id="sec-query">
       <div class="card">
         <h3>查詢</h3>
@@ -756,7 +780,6 @@ a{ color:inherit; text-decoration:none; }
       </div>
     </section>
 
-    <!-- ====== AUDIT ====== -->
     <section class="section" id="sec-audit">
       <div class="card">
         <h3>操作紀錄</h3>
@@ -764,7 +787,6 @@ a{ color:inherit; text-decoration:none; }
       </div>
     </section>
 
-    <!-- ====== SETTINGS ====== -->
     <section class="section" id="sec-settings">
       <div class="card">
         <h3>系統設定</h3>
@@ -779,19 +801,20 @@ a{ color:inherit; text-decoration:none; }
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-storage-compat.js"></script>
 
 <script>
-/* ===== Firebase init ===== */
 const firebaseConfig = {
   apiKey: "AIzaSyAXgHiQ-Kh6cv4kkOFuHVCUOwD-C1HoUQI",
   authDomain: "teamleader-system.firebaseapp.com",
   projectId: "teamleader-system",
+  storageBucket: "teamleader-system.firebasestorage.app"
 };
 if (!firebase.apps || !firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
+const storage = firebase.storage();
 
-/* ===== identity guard ===== */
 const activeRole = sessionStorage.getItem("activeRole");
 if(!activeRole){
   window.location.href = "index.html";
@@ -800,7 +823,6 @@ if(activeRole === "student"){
   window.location.href = "student.html";
 }
 
-/* ===== UI refs ===== */
 const overlay = document.getElementById("overlay");
 const loadBar = document.getElementById("loadBar");
 const app = document.getElementById("app");
@@ -837,10 +859,13 @@ const vTo = document.getElementById("vTo");
 const vSearch = document.getElementById("vSearch");
 const btnVSearch = document.getElementById("btnVSearch");
 const vApplied = document.getElementById("vApplied");
+const vListBox = document.getElementById("vListBox");
 
 const vCreateKeyword = document.getElementById("vCreateKeyword");
 const vCreateType = document.getElementById("vCreateType");
 const vCreateNote = document.getElementById("vCreateNote");
+const vCreateNoteLabel = document.getElementById("vCreateNoteLabel");
+const vCreateFile = document.getElementById("vCreateFile");
 const btnCreateViolation = document.getElementById("btnCreateViolation");
 const vCreateOk = document.getElementById("vCreateOk");
 const vCreateErr = document.getElementById("vCreateErr");
@@ -853,7 +878,6 @@ const navAnn = document.getElementById("navAnn");
 const navUsers = document.getElementById("navUsers");
 const navPerms = document.getElementById("navPerms");
 
-/* ===== helpers ===== */
 function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
 function withTimeout(promise, ms, label){
   return new Promise((resolve, reject)=>{
@@ -864,11 +888,26 @@ function withTimeout(promise, ms, label){
     );
   });
 }
+function escapeHtml(s){
+  return String(s ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#39;");
+}
+function fmtTs(ts){
+  if(!ts) return "—";
+  try{
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    return d.toLocaleString("zh-TW",{hour12:false});
+  }catch(_){
+    return "—";
+  }
+}
 
-/* ===== Loading progress ===== */
 let prog = 0;
 let progTimer = null;
-
 function startProgress(){
   stopProgress();
   prog = 8;
@@ -888,21 +927,17 @@ async function finishAndEnter(){
   stopProgress();
   loadBar.style.width = "100%";
   await sleep(160);
-
   app.style.display = "grid";
-
   overlay.classList.add("hide");
   await sleep(260);
   overlay.style.display = "none";
 }
 
-/* ===== Drawer ===== */
 function openDrawer(){ sidebar.classList.add("open"); backdrop.classList.add("show"); }
 function closeDrawer(){ sidebar.classList.remove("open"); backdrop.classList.remove("show"); }
 btnHamburger.addEventListener("click", openDrawer);
 backdrop.addEventListener("click", closeDrawer);
 
-/* ===== navigation ===== */
 function activate(target){
   document.querySelectorAll(".navbtn").forEach(b=>{
     b.classList.toggle("active", b.dataset.target === target);
@@ -941,19 +976,16 @@ document.getElementById("nav").addEventListener("click", (e)=>{
   }
 });
 
-/* logout */
 document.getElementById("btnLogout").onclick = async ()=>{
   sessionStorage.removeItem("activeRole");
   await auth.signOut();
   window.location.href = "index.html";
 };
 
-/* ===== permissions ===== */
 function hasPerm(u, key){
   return u?.roles?.superAdmin === true || u?.permissions?.[key] === true;
 }
 
-/* ===== announcement ===== */
 let ANN = null;
 let ANN_PAGE = "home";
 
@@ -964,38 +996,30 @@ function applyAnnouncementStyle(style){
   announceText.style.fontStyle = st.italic ? "italic" : "normal";
   announceText.style.textDecoration = st.underline ? "underline" : "none";
 }
-
 function updateAnnouncementVisibility(page){
   ANN_PAGE = page || ANN_PAGE;
-
   if(!ANN || ANN.enabled !== true || !String(ANN.text||"").trim()){
     announceWrap.style.display = "none";
     return;
   }
-
   if(ANN_PAGE === "home"){
     announceWrap.style.display = "";
     return;
   }
-
   const ok = ANN?.pages?.[ANN_PAGE] === true;
   announceWrap.style.display = ok ? "" : "none";
 }
-
 function renderAnnouncement(doc){
   ANN = doc || null;
-
   if(!ANN || ANN.enabled !== true || !String(ANN.text||"").trim()){
     announceWrap.style.display = "none";
     return;
   }
-
   announceText.textContent = ANN.text;
   applyAnnouncementStyle(ANN.style);
   updateAnnouncementVisibility(ANN_PAGE);
 }
 
-/* ===== quick jump ===== */
 document.getElementById("btnGoImport").onclick = ()=>activate("import");
 document.getElementById("btnGoRoutes").onclick = ()=>activate("home");
 btnGoViolationList?.addEventListener("click", ()=>{
@@ -1005,8 +1029,40 @@ btnGoViolationList?.addEventListener("click", ()=>{
 });
 btnGoNotify?.addEventListener("click", ()=>activate("home"));
 
-/* ===== violation create UI only ===== */
-btnCreateViolation?.addEventListener("click", ()=>{
+function updateViolationNoteUI(){
+  const isOther = vCreateType?.value === "其他";
+  if(vCreateNoteLabel){
+    vCreateNoteLabel.textContent = isOther ? "說明（必填）" : "說明（選「其他」時必填）";
+  }
+  if(vCreateNote){
+    vCreateNote.placeholder = isOther
+      ? "因為已選擇「其他」，此欄位必須填寫"
+      : "可輸入補充說明；若選擇「其他」則此欄必填";
+  }
+}
+vCreateType?.addEventListener("change", updateViolationNoteUI);
+updateViolationNoteUI();
+
+let ACTIVE_SEMESTER_ID = "";
+
+async function uploadViolationFiles(files){
+  const urls = [];
+  for(const file of files){
+    const safeName = `${Date.now()}_${Math.random().toString(36).slice(2)}_${file.name}`;
+    const ref = storage.ref(`violations/${ACTIVE_SEMESTER_ID}/${safeName}`);
+    await ref.put(file);
+    const url = await ref.getDownloadURL();
+    urls.push({
+      name: file.name,
+      url,
+      contentType: file.type || "",
+      size: file.size || 0
+    });
+  }
+  return urls;
+}
+
+btnCreateViolation?.addEventListener("click", async ()=>{
   vCreateOk.style.display = "none";
   vCreateErr.style.display = "none";
   vCreateOk.textContent = "";
@@ -1015,27 +1071,70 @@ btnCreateViolation?.addEventListener("click", ()=>{
   const keyword = (vCreateKeyword.value || "").trim();
   const type = (vCreateType.value || "").trim();
   const note = (vCreateNote.value || "").trim();
+  const files = Array.from(vCreateFile?.files || []);
 
+  if(!ACTIVE_SEMESTER_ID){
+    vCreateErr.style.display = "";
+    vCreateErr.textContent = "目前學期尚未設定，無法登記。";
+    return;
+  }
   if(!keyword){
     vCreateErr.style.display = "";
     vCreateErr.textContent = "請先輸入學號或班級座號。";
     return;
   }
-
   if(!type){
     vCreateErr.style.display = "";
     vCreateErr.textContent = "請先選擇違規類型。";
     return;
   }
+  if(type === "其他" && !note){
+    vCreateErr.style.display = "";
+    vCreateErr.textContent = "當違規類型選擇「其他」時，說明欄位必須填寫。";
+    return;
+  }
 
-  vCreateOk.style.display = "";
-  vCreateOk.innerHTML =
-    `目前已完成頁面驗證。<br>` +
-    `下一步會依「${keyword}」查找學生，並寫入 semesters/{semesterId}/violations。<br>` +
-    `違規類型：${type}` + (note ? `<br>備註：${note}` : "");
+  btnCreateViolation.disabled = true;
+  btnCreateViolation.textContent = "送出中…";
+
+  try{
+    const uploadedFiles = files.length ? await uploadViolationFiles(files) : [];
+    await db.collection("semesters").doc(ACTIVE_SEMESTER_ID).collection("violations").add({
+      keyword,
+      type,
+      note,
+      files: uploadedFiles,
+      status: "待審",
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      createdByUid: auth.currentUser?.uid || "",
+      createdByRole: activeRole || "",
+    });
+
+    vCreateOk.style.display = "";
+    vCreateOk.innerHTML =
+      `✅ 已成功登記違規。<br>` +
+      `對象：${escapeHtml(keyword)}<br>` +
+      `類型：${escapeHtml(type)}` +
+      (note ? `<br>說明：${escapeHtml(note)}` : "") +
+      `<br>附件數：${uploadedFiles.length}`;
+
+    vCreateKeyword.value = "";
+    vCreateType.value = "";
+    vCreateNote.value = "";
+    vCreateFile.value = "";
+    updateViolationNoteUI();
+
+    await loadViolationList();
+  }catch(e){
+    console.error(e);
+    vCreateErr.style.display = "";
+    vCreateErr.textContent = "送出失敗，請檢查 Firestore / Storage 權限或設定。";
+  }finally{
+    btnCreateViolation.disabled = false;
+    btnCreateViolation.textContent = "送出登記";
+  }
 });
 
-/* ===== violation list UI only ===== */
 function yyyy_mm_dd(d){
   const y = d.getFullYear();
   const m = String(d.getMonth()+1).padStart(2,"0");
@@ -1086,17 +1185,102 @@ function updateAppliedText(extra){
 vFilter.addEventListener("change", ()=> setViolationPreset(vFilter.value));
 btnVSearch.addEventListener("click", ()=> runViolationSearch());
 
+function matchesDateFilter(data){
+  if(vFilter.value === "pending"){
+    return (data.status || "") === "待審";
+  }
+
+  if(vFilter.value === "all" || !data.createdAt) return true;
+
+  const d = data.createdAt.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
+  const ymd = yyyy_mm_dd(d);
+
+  if(vFilter.value === "today"){
+    return ymd === yyyy_mm_dd(new Date());
+  }
+  if(vFilter.value === "week"){
+    const mon = yyyy_mm_dd(startOfWeekMonday(new Date()));
+    const today = yyyy_mm_dd(new Date());
+    return ymd >= mon && ymd <= today;
+  }
+  if(vFilter.value === "custom"){
+    const from = vFrom.value || "";
+    const to = vTo.value || "";
+    if(from && ymd < from) return false;
+    if(to && ymd > to) return false;
+    return true;
+  }
+  return true;
+}
+
+function matchesKeywordFilter(data){
+  const q = (vSearch.value || "").trim().toLowerCase();
+  if(!q) return true;
+  const hay = [
+    data.keyword || "",
+    data.type || "",
+    data.note || "",
+    data.status || ""
+  ].join(" ").toLowerCase();
+  return hay.includes(q);
+}
+
+function renderViolationCards(items){
+  if(!items.length){
+    vListBox.innerHTML = `<div class="mutedBox">沒有符合條件的違規紀錄。</div>`;
+    return;
+  }
+
+  vListBox.innerHTML = items.map(item=>{
+    const d = item.data;
+    const files = Array.isArray(d.files) ? d.files : [];
+    return `
+      <div class="listCard">
+        <div class="title">${escapeHtml(d.keyword || "—")}｜${escapeHtml(d.type || "—")}</div>
+        <div class="sub">
+          狀態：${escapeHtml(d.status || "—")}<br>
+          說明：${escapeHtml(d.note || "—")}<br>
+          建立時間：${escapeHtml(fmtTs(d.createdAt))}
+        </div>
+        ${files.length ? `
+          <div class="fileRow">
+            ${files.map(f => `<a class="fileLink" href="${escapeHtml(f.url)}" target="_blank">${escapeHtml(f.name || "附件")}</a>`).join("")}
+          </div>
+        ` : ``}
+      </div>
+    `;
+  }).join("");
+}
+
+async function loadViolationList(){
+  if(!ACTIVE_SEMESTER_ID){
+    vListBox.innerHTML = `<div class="mutedBox">目前學期未設定。</div>`;
+    return;
+  }
+
+  try{
+    const snap = await db.collection("semesters").doc(ACTIVE_SEMESTER_ID)
+      .collection("violations")
+      .orderBy("createdAt","desc")
+      .limit(100)
+      .get();
+
+    let items = snap.docs.map(doc => ({ id: doc.id, data: doc.data() }));
+    items = items.filter(item => matchesDateFilter(item.data) && matchesKeywordFilter(item.data));
+    renderViolationCards(items);
+  }catch(e){
+    console.error(e);
+    vListBox.innerHTML = `<div class="errorBox">讀取違規紀錄失敗，請檢查 Firestore Rules。</div>`;
+  }
+}
+
 function runViolationSearch(){
   let extra = "";
   if(vFilter.value==="pending") extra = "狀態：待審";
   updateAppliedText(extra);
-
-  document.getElementById("vList").innerHTML =
-    `這裡將顯示違規清單（下一步接 Firestore：semesters/{semesterId}/violations）。<br>` +
-    `目前：已套用 <b>${(vFilter.value||"all")}</b> 篩選。`;
+  loadViolationList();
 }
 
-/* ===== render meta ===== */
 function renderImportStatus(doc){
   if(!doc){
     importStatus.innerHTML = "車表匯入狀況：尚未設定";
@@ -1146,9 +1330,6 @@ function renderNotifications(doc){
   nfAdmin.textContent = `行政未讀通知：${c}`;
   nfNote.textContent = doc ? "已載入" : "尚未設定";
 }
-
-/* ===== main flow ===== */
-let ACTIVE_SEMESTER_ID = "";
 
 auth.onAuthStateChanged(async (user)=>{
   overlay.style.display = "flex";
@@ -1230,7 +1411,7 @@ auth.onAuthStateChanged(async (user)=>{
     renderNotifications(noti);
 
     updateAnnouncementVisibility("home");
-
+    await loadViolationList();
     await finishAndEnter();
 
   } catch(err){
@@ -1242,7 +1423,6 @@ auth.onAuthStateChanged(async (user)=>{
   }
 });
 
-/* hash jump */
 (function initFromHash(){
   const h = location.hash || "";
   if(h.includes("violation-create")){
@@ -1250,8 +1430,9 @@ auth.onAuthStateChanged(async (user)=>{
   }else if(h.includes("violation-list")){
     activate("violation-list");
     if(h.includes("filter=today")) { setViolationPreset("today"); runViolationSearch(); }
-    if(h.includes("filter=week")) { setViolationPreset("week"); runViolationSearch(); }
-    if(h.includes("filter=pending")) { setViolationPreset("pending"); runViolationSearch(); }
+    else if(h.includes("filter=week")) { setViolationPreset("week"); runViolationSearch(); }
+    else if(h.includes("filter=pending")) { setViolationPreset("pending"); runViolationSearch(); }
+    else { runViolationSearch(); }
   }else{
     updateAnnouncementVisibility("home");
   }
